@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>what-is-next™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+            user-select: text;
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* Ukryj custom cursor gdy użytkownik zaznacza tekst */
+        *::selection {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        /* Firefox */
+        *::-moz-selection {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            pointer-events: none;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><defs><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+            z-index: 1000;
+            animation: noiseMove 20s linear infinite;
+        }
+
+        @keyframes noiseMove {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-10px) translateY(-5px); }
+            50% { transform: translateX(5px) translateY(-10px); }
+            75% { transform: translateX(-5px) translateY(5px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        .grain-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.02) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.025) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 90%, rgba(0,0,0,0.4) 0%, transparent 40%);
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .parallax-element {
+            transition: transform 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* NOWY SYSTEM HEADER - bez konfliktujących przejść */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Domyślny stan - pełny ekran */
+        .header-hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Zwinięty stan - kompaktowy */
+        .header-compact {
+            height: 80px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Aktywny stan kompaktowy */
+        header.scrolled .header-hero {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        header.scrolled .header-compact {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header-logo {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            filter: brightness(1.1) contrast(1.2);
+        }
+
+        .header-hero .header-logo {
+            width: 600px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .header-compact .header-logo {
+            width: 200px;
+            margin: 0;
+        }
+
+        .header-logo:hover {
+            filter: brightness(1.3) contrast(1.4);
+            transform: scale(1.02);
+        }
+
+        .tagline {
+            font-size: 18px;
+            opacity: 0.7;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 300;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .header-compact .tagline {
+            font-size: 12px;
+            letter-spacing: 3px;
+            margin-left: 20px;
+        }
+
+        .main-content {
+            margin-top: 100vh;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+        }
+
+        .section {
+                 padding-top: 50px;
+            margin: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 200;
+            letter-spacing: 6px;
+            margin-bottom: 60px;
+            text-align: center;
+            text-transform: uppercase;
+            opacity: 0.95;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section-title:hover {
+            letter-spacing: 12px;
+            transform: scaleX(1.1);
+            opacity: 1;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+        }
+
+        .about-text {
+       
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.8;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            letter-spacing: 1px;
+        }
+
+        .releases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .release-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+        }
+
+        .release-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .release-card:hover::before {
+            left: 100%;
+        }
+
+        .release-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .release-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .release-title:hover {
+            letter-spacing: 3px;
+            transform: scaleX(1.1);
+        }
+
+        .release-artist {
+            opacity: 0.7;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .release-artist:hover {
+            letter-spacing: 2px;
+            transform: scaleX(1.08);
+            opacity: 0.9;
+        }
+
+        .release-date {
+            font-size: 12px;
+            opacity: 0.5;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .release-date:hover {
+            letter-spacing: 2px;
+            transform: scaleX(1.05);
+        }
+
+        .artists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .artist-card {
+            text-align: center;
+            padding: 45px 25px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            backdrop-filter: blur(8px);
+            transform-style: preserve-3d;
+        }
+
+        .artist-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 50%, rgba(255,255,255,0.01) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .artist-card:hover::before {
+            opacity: 1;
+        }
+
+        .artist-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .artist-name {
+            font-size: 24px;
+            font-weight: 200;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            padding-top: 10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-name:hover {
+            letter-spacing: 6px;
+            transform: scaleX(1.15);
+        }
+
+        .artist-genre {
+            opacity: 0.6;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .artist-genre:hover {
+            letter-spacing: 2px;
+            transform: scaleX(1.1);
+            opacity: 0.8;
+        }
+
+        .demo-section {
+            background: rgba(255,255,255,0.01);
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 100px;
+        }
+
+        .demo-title {
+            font-size: 28px;
+            font-weight: 200;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .demo-title:hover {
+            letter-spacing: 8px;
+            transform: scaleX(1.1);
+        }
+
+        .demo-text {
+            font-size: 16px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .demo-text:hover {
+            letter-spacing: 2px;
+            transform: scaleX(1.05);
+            opacity: 0.9;
+        }
+
+        .demo-email {
+            font-size: 20px;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .demo-email:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-2px) scaleX(1.05);
+            letter-spacing: 3px;
+        }
+
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            opacity: 0.4;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        footer p {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        footer p:hover {
+            letter-spacing: 4px;
+            transform: scaleX(1.1);
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .header-hero .header-logo {
+                width: 400px;
+            }
+
+            .header-compact .header-logo {
+                width: 150px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .about-text {
+                font-size: 16px;
+            }
+            
+            .releases-grid,
+            .artists-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-compact {
+                flex-direction: column;
+                height: 100px;
+                padding: 10px;
+            }
+
+            .header-compact .tagline {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+    <div class="noise-overlay"></div>
+    <div class="grain-texture"></div>
+
+    <header id="main-header">
+        <!-- Hero State (pełny ekran) -->
+        <div class="header-hero">
+            <img src="logo.png" alt="what-is-next™" class="header-logo fade-in" />
+            <p class="tagline fade-in">independent record label</p>
+        </div>
+        
+        <!-- Compact State (zwinięty) -->
+        <div class="header-compact">
+            <img src="https://via.placeholder.com/600x200/ffffff/000000?text=what-is-next™" alt="what-is-next™" class="header-logo" />
+            <p class="tagline">independent record label</p>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+
+        <section class="section">
+            <h2 class="section-title fade-in">About</h2>
+            <p class="about-text fade-in">
+                what-is-next™ is an independent polish record label focused on discovering and promoting 
+                the artists of tomorrow. We believe in music that transcends boundaries and defines new trends. 
+                Our mission is to support creators in realizing their artistic vision 
+                and introducing sonic avant-garde to the market.
+            </p>
+        </section>
+
+
+        <section class="section">
+            <h2 class="section-title fade-in">Artists</h2>
+            <div class="artists-grid">
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">quei</h3>
+         
+                </div>
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">flajuss</h3>
+
+                </div>
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">Orzechuu</h3>
+
+                </div>
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">rscky.</h3>
+   
+                </div>
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">szczajmon</h3>
+           
+                </div>
+                <div class="artist-card fade-in">
+                    <h3 class="artist-name">emwu</h3>
+             
+                </div>
+                                <div class="artist-card fade-in">
+                    <h3 class="artist-name">LXM</h3>
+             
+                </div>
+                                <div class="artist-card fade-in">
+                    <h3 class="artist-name">Mrożonix</h3>
+             
+                </div>
+            </div>
+        </section>
+        </div>
+    </div>
+
+    <section class="demo-section">
+        <div class="container">
+            <h2 class="demo-title fade-in">Send Your Demo</h2>
+            <p class="demo-text fade-in">Got material you want to share with us?</p>
+            <a href="mailto:demo@what-is-next.com" class="demo-email fade-in">demo@what-is-next.vip</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 what-is-next™ - all rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom cursor - ukryj podczas zaznaczania tekstu
+        const cursor = document.querySelector('.custom-cursor');
+        const trails = [];
+        const trailCount = 8;
+        let isSelecting = false;
+
+        // Create cursor trails
+        for (let i = 0; i < trailCount; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            document.body.appendChild(trail);
+            trails.push({
+                element: trail,
+                x: 0,
+                y: 0
+            });
+        }
+
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if (!isSelecting) {
+                cursor.style.left = mouseX - 10 + 'px';
+                cursor.style.top = mouseY - 10 + 'px';
+            }
+        });
+
+        // Ukryj cursor podczas zaznaczania
+        document.addEventListener('mousedown', () => {
+            isSelecting = true;
+            cursor.style.opacity = '0';
+            trails.forEach(trail => trail.element.style.opacity = '0');
+        });
+
+        document.addEventListener('mouseup', () => {
+            setTimeout(() => {
+                isSelecting = false;
+                cursor.style.opacity = '1';
+            }, 100);
+        });
+
+        // Pokaż zwykły cursor na tekstach
+        document.querySelectorAll('p, h1, h2, h3, span, a, .demo-email').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '0.3';
+                trails.forEach(trail => trail.element.style.opacity = '0.1');
+                document.body.style.cursor = 'text';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '1';
+                trails.forEach(trail => trail.element.style.opacity = '1');
+                document.body.style.cursor = 'none';
+            });
+        });
+
+        // Trail animation
+        function animateTrails() {
+            if (!isSelecting) {
+                trails.forEach((trail, index) => {
+                    const delay = index * 0.1;
+                    trail.x += (mouseX - trail.x) * (0.2 - delay * 0.02);
+                    trail.y += (mouseY - trail.y) * (0.2 - delay * 0.02);
+                    
+                    trail.element.style.left = trail.x - 2 + 'px';
+                    trail.element.style.top = trail.y - 2 + 'px';
+                    trail.element.style.opacity = (1 - index * 0.1).toString();
+                });
+            }
+            
+            requestAnimationFrame(animateTrails);
+        }
+        animateTrails();
+
+        // Enhanced parallax mouse movement
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = (e.clientX / window.innerWidth) - 0.5;
+            const mouseY = (e.clientY / window.innerHeight) - 0.5;
+            
+            // Grain texture parallax
+            const grainTexture = document.querySelector('.grain-texture');
+            grainTexture.style.transform = `translate(${mouseX * 25}px, ${mouseY * 25}px)`;
+            
+            // Cards parallax
+            document.querySelectorAll('.release-card, .artist-card').forEach((card, index) => {
+                const intensity = (index % 2 === 0) ? 1 : -1;
+                card.style.transform = `translateX(${mouseX * 15 * intensity}px) translateY(${mouseY * 15 * intensity}px)`;
+            });
+            
+            // Section titles parallax
+            document.querySelectorAll('.section-title').forEach((title, index) => {
+                title.style.transform = `translateX(${mouseX * 10}px)`;
+            });
+        });
+
+        // Smooth scrolling animation observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // NOWA LOGIKA SCROLL HEADER - prostsza i bardziej niezawodna
+        const header = document.getElementById('main-header');
+        let ticking = false;
+
+        function updateHeader() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollThreshold = window.innerHeight * 0.7;
+            
+            if (scrollTop > scrollThreshold) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestTick);
+
+        // Enhanced scroll effects
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            
+            // Noise overlay movement
+            const noise = document.querySelector('.noise-overlay');
+            noise.style.transform = `translateY(${scrolled * 0.05}px) rotate(${scrolled * 0.01}deg)`;
+        });
+
+        // Hover effects for interactive elements
+        document.querySelectorAll('.release-card, .artist-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursor.style.background = 'rgba(255, 255, 255, 0.4)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.background = 'rgba(255, 255, 255, 0.8)';
+            });
+        });
+
+        // Logo hover effect
+        document.querySelectorAll('.header-logo').forEach(logo => {
+            logo.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+                cursor.style.background = 'rgba(255, 255, 255, 0.3)';
+            });
+
+            logo.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.background = 'rgba(255, 255, 255, 0.8)';
+            });
+        });
+    </script>
+</body>
+</html>
