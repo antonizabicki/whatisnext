@@ -1,0 +1,175 @@
+@font-face {
+  font-family: 'Neue Haas Grotesk';
+  src: url('fonts/Neue Haas Grotesk Text Pro 65 Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    background-color: #f0f1f3;
+    color: #1a1a1a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+    transition: background-color 0.5s ease, color 0.5s ease; /* Płynne przejście */
+}
+
+#webgl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.5s ease-out;
+}
+#webgl-container.faded {
+    opacity: 0;
+}
+.custom-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #888;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    mix-blend-mode: difference;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+.hero-section {
+    height: 100vh;
+}
+.about-section {
+    position: relative;
+    min-height: 100vh;
+    padding: 10vh 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('back.png');
+    background-size: cover;
+    background-position: center center;
+}
+.content-wrapper {
+    max-width: 700px;
+    text-align: center;
+}
+.content-wrapper h2 {
+    font-family: 'Neue Haas Grotesk', sans-serif;
+    font-size: 8rem;
+    font-weight: 700;
+    color: #000000;
+    line-height: 1;
+    margin-bottom: 40px;
+    letter-spacing: -2px;
+    transition: color 0.5s ease; 
+}
+.content-wrapper p {
+    font-family: 'Neue Haas Grotesk', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 1.5em;
+    color: #000000;
+    transition: color 0.5s ease; 
+}
+.content-wrapper p:last-child {
+    margin-bottom: 0;
+}
+.contact-section {
+    background-color: #f0f1f3;
+    text-align: center;
+    padding: 10vh 5vw;
+    transition: background-color 0.5s ease; 
+}
+.contact-section h2 {
+    font-family: 'Neue Haas Grotesk', sans-serif;
+    font-size: 6rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    transition: color 0.5s ease; 
+}
+.contact-section p {
+    font-family: 'Neue Haas Grotesk', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 1.5em;
+    color: #000000;
+    transition: color 0.5s ease; 
+}
+.contact-section a {
+    font-family: 'Neue Haas Grotesk', sans-serif;
+    font-size: 1.3rem;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease, color 0.5s ease;
+}
+.contact-section a:hover {
+    border-bottom-color: #1a1a1a;
+}
+#logo-source {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    z-index: -1;
+}
+
+#dark-mode-toggle {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #1a1a1a;
+    border-radius: 50%;
+    z-index: 1000;
+    cursor: pointer;
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+
+
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f0f1f3;
+}
+
+
+body.dark-mode #dark-mode-toggle {
+    border-color: #f0f1f3;
+    background-color: #f0f1f3; 
+}
+
+
+body.dark-mode .content-wrapper h2,
+body.dark-mode .content-wrapper p,
+body.dark-mode .contact-section h2,
+body.dark-mode .contact-section p {
+    color: #f0f1f3;
+}
+
+
+body.dark-mode .contact-section {
+    background-color: #1a1a1a;
+}
+body.dark-mode .contact-section a {
+    color: #f0f1f3;
+}
+body.dark-mode .contact-section a:hover {
+    border-bottom-color: #f0f1f3;
+}
