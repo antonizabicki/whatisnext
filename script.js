@@ -1,4 +1,4 @@
-// === KLASA DO ANIMACJI LOGO (Z POPRAWKĄ BŁĘDU) ===
+
 class LogoDistortionEffect {
     constructor(container, sourceDivId) {
         this.container = container;
@@ -21,18 +21,15 @@ class LogoDistortionEffect {
 
     displayError(message) { this.container.innerHTML = `<div style="color: #c0392b; border: 2px solid #c0392b; background: #fbeae5; padding: 20px; max-width: 600px; text-align: left; font-family: monospace;"><h3>Wystąpił błąd!</h3><p><strong>Problem:</strong> ${message}</p></div>`; }
 
-    // Ta funkcja teraz wczytuje plik SVG, przetwarza go i tworzy teksturę
+
     loadAndCreateTexture(svgPath) {
         return new Promise(async (resolve, reject) => {
             try {
-                // Krok 1: Wczytaj plik SVG
+    
                 const response = await fetch(svgPath);
                 if (!response.ok) throw new Error(`Nie udało się załadować pliku: ${svgPath}`);
-                
-                // ===============================================
-                // === POPRAWIONA LINIA (TUTAJ BYŁ BŁĄD) ===
-                // ===============================================
-                const svgText = await response.text(); // Usunięto 'this.'
+            
+                const svgText = await response.text(); 
                 
                 this.sourceDiv.innerHTML = svgText;
                 
@@ -40,7 +37,7 @@ class LogoDistortionEffect {
                 const textElements = svgClone.querySelectorAll('text, tspan');
                 textElements.forEach(el => el.remove());
 
-                // ZMIANA KOLORU W ZALEŻNOŚCI OD TRYBU
+         
                 const fillColor = document.body.classList.contains('dark-mode') ? '#f0f1f3' : '#1a1a1a';
                 const elementsToColor = svgClone.querySelectorAll('path, g, rect, circle');
                 elementsToColor.forEach(el => el.setAttribute('fill', fillColor));
@@ -73,7 +70,7 @@ class LogoDistortionEffect {
         });
     }
 
-    // Nowa funkcja do podmiany logo w locie
+
     async changeLogo(newSvgPath) {
         try {
             await this.loadAndCreateTexture(newSvgPath);
@@ -149,7 +146,7 @@ class LogoDistortionEffect {
     }
 }
 
-// === GŁÓWNA LOGIKA STRONY ===
+
 document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.getElementById('dark-mode-toggle');
     const body = document.body;
