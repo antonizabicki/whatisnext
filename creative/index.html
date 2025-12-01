@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>what-is-next creative</title>
+    
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+        /* --- RESET I BAZA --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- TŁO (BACKGROUND FX) --- */
+        .ambient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #050505;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.08;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: white;
+            animation-duration: 25s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: #444;
+            animation-duration: 30s;
+            animation-direction: alternate-reverse;
+        }
+
+        .blob-3 {
+            top: 40%;
+            left: 40%;
+            width: 40vw;
+            height: 40vw;
+            background: #222;
+            opacity: 0.12;
+            filter: blur(80px);
+            animation-name: float-center;
+            animation-duration: 35s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 80px) scale(1.1); }
+        }
+
+        @keyframes float-center {
+            0% { transform: translate(-100px, -50px) rotate(0deg); }
+            100% { transform: translate(100px, 50px) rotate(20deg); }
+        }
+
+
+        /* --- SCROLL MARGIN --- */
+        section, header, footer {
+            scroll-margin-top: 120px; 
+        }
+
+        /* --- MENU BAR --- */
+        .glass-menu-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 90%;
+            max-width: 700px;
+        }
+
+        .glass-menu {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .menu-left, .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .menu-left {
+            padding-left: 1rem;
+        }
+
+        .menu-link {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .menu-link:hover {
+            color: white;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .menu-download-btn {
+            background: white;
+            color: black;
+            text-decoration: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .menu-download-btn:hover {
+            background: #ddd;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .hide-mobile { display: none; }
+            .glass-menu-container { width: 95%; top: 15px; }
+            .menu-left, .menu-right { gap: 0.8rem; }
+        }
+
+        /* --- TYPOGRAFIA --- */
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to bottom, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #888;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #a1a1a1;
+            line-height: 1.5;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- HEADER SECTION --- */
+        header {
+            text-align: center;
+            padding: 8rem 2rem 1rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- HERO IMAGE --- */
+        .perspective-container {
+            width: 100%;
+            height: auto;
+            min-height: 50vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            perspective: 2000px;
+            margin-bottom: 2rem; 
+            padding-top: 0; 
+        }
+
+        .hero-image-wrapper {
+            width: 95%; 
+            max-width: 1400px; 
+            position: relative;
+            transform-style: preserve-3d;
+            margin-top: 1rem; 
+        }
+
+        .hero-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 20px 50px rgba(255,255,255,0.08));
+            border-radius: 8px;
+        }
+
+        /* --- ABOUT SECTION --- */
+        .about-section {
+            padding: 2rem 2rem 4rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* --- RACKS LIST --- */
+        .racks-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem; 
+        }
+
+        .rack-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem; 
+            opacity: 0;
+            transform: translateY(50px);
+            padding: 2rem 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .rack-item:last-child {
+            border-bottom: none;
+        }
+
+        .rack-img-wrapper {
+            flex: 1; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .rack-img-wrapper img {
+            width: 100%;
+            max-width: 420px; 
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+            transition: transform 0.5s ease;
+        }
+
+        /* Pierwszy element (Reverb) */
+        .rack-item:first-child .rack-img-wrapper img {
+            max-width: 650px; 
+        }
+
+        .rack-item:hover .rack-img-wrapper img {
+            transform: scale(1.03) rotate(-1deg);
+        }
+
+        .rack-info {
+            flex: 1; 
+            text-align: left;
+            padding-right: 1rem;
+        }
+
+        .rack-info h4 {
+            font-size: 2rem; 
+            margin-bottom: 0.8rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .rack-info p {
+            font-size: 1.05rem;
+            color: #888;
+            margin: 0;
+        }
+
+        .rack-number {
+            font-size: 0.8rem;
+            color: #444;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .rack-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 3rem 0;
+            }
+            .rack-info {
+                text-align: center;
+                padding-right: 0;
+            }
+            .rack-item:first-child .rack-img-wrapper img {
+                max-width: 100%;
+            }
+        }
+
+        /* --- FOOTER / DOWNLOAD --- */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem 8rem 2rem; 
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: black;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .anim-up { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="ambient-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- MENU BAR -->
+    <div class="glass-menu-container">
+        <nav class="glass-menu">
+            <div class="menu-left">
+                <a href="#top" class="menu-link" data-lang="nav_home">Home</a>
+                <a href="#about" class="menu-link hide-mobile" data-lang="nav_about">About</a>
+                <a href="#racks" class="menu-link hide-mobile" data-lang="nav_racks">Racks</a>
+            </div>
+            <div class="menu-right">
+                <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">PL</button>
+                <a href="mailto:demo@what-is-next.vip" class="menu-link" data-lang="nav_contact">Contact</a>
+                <a href="https://quei.gumroad.com/l/rackpack" target="_blank" class="menu-download-btn" data-lang="nav_download">Download</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HEADER -->
+    <header id="top">
+        <div class="header-content">
+            <h2 class="anim-up">what-is-next creative</h2>
+            <h1 class="anim-up" data-lang="hero_title">The tools that elevate your sound<br> and accelerate your workflow.</h1>
+            <p class="anim-up" data-lang="hero_desc">A curated set of free Ableton racks designed for precision, speed, and a modern production workflow.</p>
+        </div>
+    </header>
+
+    <!-- 3D IMAGE -->
+    <div class="perspective-container">
+        <div class="hero-image-wrapper" id="heroImage">
+            <img src="main.png" alt="Ableton Racks Interface">
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about">
+        <div class="anim-fade">
+            <h3 data-lang="about_title">About</h3> 
+            <p data-lang="about_desc">
+                what-is-next™ creative delivers intuitive Ableton racks that make professional sound design effortless. Crafted for both beginners and advanced producers, our racks transform simple tools - even stock plugins - into distinctive, ready-to-use sounds, saving time while inspiring creativity. Unlike most alternatives, they run on Ableton Standard, making high-quality production more accessible without compromise.
+            </p>
+        </div>
+    </section>
+
+    <!-- RACKS LIST -->
+    <section class="racks-section" id="racks">
+        
+        <!-- 1. REVERB -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="reverb.png" alt="Reverb">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack1_tag">01 /// REVERB</span>
+                <h4 data-lang="rack1_title">R3VARB 2</h4>
+                <p data-lang="rack1_desc">A refreshed, hit-ready reverb built for ultra-fast, low-CPU ambience shaping. With only four knobs, it delivers the quickest reverb workflow you can get ever.</p>
+            </div>
+        </div>
+
+        <!-- 2. LFO -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="lfo.png" alt="LFO">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack2_tag">02 /// MODULATION</span>
+                <h4 data-lang="rack2_title">LFOQ 2</h4>
+                <p data-lang="rack2_desc">A lightweight LFO rack built around the most commonly used global LFO shapes for fast, reliable modulation. Perfect for tight stutter house chops or rapid DnB movement, giving you clean control without overthinking.</p>
+            </div>
+        </div>
+
+        <!-- 3. PHONE -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="phone.png" alt="Phone">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack3_tag">03 /// EQ</span>
+                <h4 data-lang="rack3_title">PHONER</h4>
+                <p data-lang="rack3_desc">A focused EQ tool that shapes audio into a narrow, phone-like band. Useful for ad-libs or background elements that need a lo-fi, distant character.</p>
+            </div>
+        </div>
+
+        <!-- 4. KNOCK -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="knock.png" alt="Knock">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack4_tag">04 /// REVERB</span>
+                <h4 data-lang="rack4_title">KNOCKER™</h4>
+                <p data-lang="rack4_desc">A tension-boosting micro-riser that lifts a short reverb every two bars to add contrast in heavy drops. Inspired by Knock2, it injects instant energy and movement without cluttering the mix.</p>
+            </div>
+        </div>
+
+        <!-- 5. DELAYED -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="delayed.png" alt="Delay">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack5_tag">05 /// DELAY</span>
+                <h4 data-lang="rack5_title">DELAYED 2</h4>
+                <p data-lang="rack5_desc">Revamped classic delay with two modes: short multi-bar repeats or a single 60ms delay for a smooth, unique texture. Minimal CPU load, instant character.</p>
+            </div>
+        </div>
+
+        <!-- 6. CRUSH -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="crush.png" alt="Bitcrusher">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack6_tag">06 /// DISTORTION</span>
+                <h4 data-lang="rack6_title">CRUSHY BOY 2</h4>
+                <p data-lang="rack6_desc">Bitcrusher with added flavor options: distortion, vibrato, or phaser. Versatile for gritty, textured sounds.</p>
+            </div>
+        </div>
+
+        <!-- 7. ATMO -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="atmo.png" alt="Atmo">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack7_tag">07 /// REVERB</span>
+                <h4 data-lang="rack7_title">ATMO</h4>
+                <p data-lang="rack7_desc">Instant atmosphere generator that adds space and ambient depth to any track.</p>
+            </div>
+        </div>
+
+        <!-- 8. ROOMBOI -->
+        <div class="rack-item">
+            <div class="rack-img-wrapper">
+                <img src="roomboi.png" alt="Room Reverb">
+            </div>
+            <div class="rack-info">
+                <span class="rack-number" data-lang="rack8_tag">08 /// REVERB</span>
+                <h4 data-lang="rack8_title">ROOMBOY 2</h4>
+                <p data-lang="rack8_desc">Unique space creator that makes sounds feel light-years away. Perfect for deep, distant backgrounds.</p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <h2 style="font-size: 2rem; color: white; opacity: 1; transform: none; margin-bottom: 1rem;" data-lang="footer_title">Ready to upgrade?</h2>
+        <p style="margin-bottom: 3rem;" data-lang="footer_desc">Get all the racks. Ableton Live 12 Standard or higher required.</p> 
+        <a href="https://quei.gumroad.com/l/rackpack" target="_blank" class="download-btn">
+            <span data-lang="btn_download">Download All Racks</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </a>
+        <p style="margin-top: 4rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">© 2025 what-is-next™</p>
+    </footer>
+
+    <!-- LOGIKA -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- TŁUMACZENIA ---
+        const translations = {
+            en: {
+                // UI
+                nav_home: "Home",
+                nav_about: "About",
+                nav_racks: "Racks",
+                nav_contact: "Contact",
+                nav_download: "Download",
+                hero_title: "The tools that elevate your sound\nand accelerate your workflow.",
+                hero_desc: "A curated set of free Ableton racks designed for precision, speed, and a modern production workflow.",
+                
+                about_title: "About", 
+                about_desc: "what-is-next™ creative delivers intuitive Ableton racks that make professional sound design effortless. Crafted for both beginners and advanced producers, our racks transform simple tools - even stock plugins - into distinctive, ready-to-use sounds, saving time while inspiring creativity. Unlike most alternatives, they run on Ableton Standard, making high-quality production more accessible without compromise.",
+                
+                footer_title: "Ready to upgrade?",
+                footer_desc: "Get all the racks. Ableton Live 12 Standard or higher required.", 
+                btn_download: "Download All Racks",
+
+                // RACKS
+                rack1_tag: "01 /// REVERB",
+                rack1_title: "R3VARB 2",
+                rack1_desc: "A refreshed, hit-ready reverb built for ultra-fast, low-CPU ambience shaping. With only four knobs, it delivers the quickest reverb workflow you can get ever.",
+                rack2_tag: "02 /// MODULATION",
+                rack2_title: "LFOQ 2",
+                rack2_desc: "A lightweight LFO rack built around the most commonly used global LFO shapes for fast, reliable modulation. Perfect for tight stutter house chops or rapid DnB movement, giving you clean control without overthinking.",
+                rack3_tag: "03 /// EQ",
+                rack3_title: "PHONER",
+                rack3_desc: "A focused EQ tool that shapes audio into a narrow, phone-like band. Useful for ad-libs or background elements that need a lo-fi, distant character.",
+                rack4_tag: "04 /// REVERB",
+                rack4_title: "KNOCKER™",
+                rack4_desc: "A tension-boosting micro-riser that lifts a short reverb every two bars to add contrast in heavy drops. Inspired by Knock2, it injects instant energy and movement without cluttering the mix.",
+                rack5_tag: "05 /// DELAY",
+                rack5_title: "DELAYED 2",
+                rack5_desc: "Revamped classic delay with two modes: short multi-bar repeats or a single 60ms delay for a smooth, unique texture. Minimal CPU load, instant character.",
+                rack6_tag: "06 /// DISTORTION",
+                rack6_title: "CRUSHY BOY 2",
+                rack6_desc: "Bitcrusher with added flavor options: distortion, vibrato, or phaser. Versatile for gritty, textured sounds.",
+                rack7_tag: "07 /// REVERB",
+                rack7_title: "ATMO",
+                rack7_desc: "Instant atmosphere generator that adds space and ambient depth to any track.",
+                rack8_tag: "08 /// REVERB",
+                rack8_title: "ROOMBOY 2",
+                rack8_desc: "Unique space creator that makes sounds feel light-years away. Perfect for deep, distant backgrounds."
+            },
+            pl: {
+                // UI
+                nav_home: "Start",
+                nav_about: "O nas",
+                nav_racks: "Urządzenia",
+                nav_contact: "Kontakt",
+                nav_download: "Pobierz",
+                hero_title: "Narzędzia, które podniosą Twój dźwięk\ni przyspieszą pracę.",
+                hero_desc: "Wyselekcjonowany zestaw darmowych racków do Abletona, zaprojektowany z myślą o precyzji, szybkości i nowoczesnej produkcji.",
+                
+                about_title: "O nas",
+                about_desc: "what-is-next™ creative dostarcza intuicyjne racki do Abletona, które czynią profesjonalny sound design bezwysiłkowym. Stworzone dla początkujących i zaawansowanych, nasze racki zmieniają proste narzędzia - nawet stockowe wtyczki - w charakterystyczne, gotowe do użycia brzmienia, oszczędzając czas i inspirując kreatywność. Działają na Ableton Standard, czyniąc wysokiej jakości produkcję dostępną bez kompromisów.",
+                
+                footer_title: "Gotowy na upgrade?",
+                footer_desc: "Pobierz wszystkie racki. Wymagany Ableton Live 12 Standard lub nowszy.",
+                btn_download: "Pobierz Wszystkie",
+
+                // RACKS
+                rack1_tag: "01 /// REVERB",
+                rack1_title: "R3VARB 2",
+                rack1_desc: "Odświeżony, gotowy na hity reverb stworzony do ultra-szybkiego kształtowania przestrzeni przy niskim zużyciu CPU. Mając tylko cztery pokrętła, zapewnia najszybszy workflow pogłosu w historii.",
+                rack2_tag: "02 /// MODULACJA",
+                rack2_title: "LFOQ 2",
+                rack2_desc: "Lekki rack LFO zbudowany wokół najczęściej używanych kształtów dla szybkiej i niezawodnej modulacji. Idealny do ciasnych cięć stutter house lub szybkiego ruchu w DnB, dając czystą kontrolę bez zbędnego myślenia.",
+                rack3_tag: "03 /// EQ",
+                rack3_title: "PHONER",
+                rack3_desc: "Skoncentrowane narzędzie EQ, które kształtuje dźwięk w wąskie pasmo telefoniczne. Przydatne dla ad-libów lub elementów tła, które potrzebują lo-fi, odległego charakteru.",
+                rack4_tag: "04 /// REVERB",
+                rack4_title: "KNOCKER™",
+                rack4_desc: "Budujący napięcie mikro-riser, który podbija krótki pogłos co dwa takty, dodając kontrastu w ciężkich dropach. Zainspirowany Knock2, wstrzykuje natychmiastową energię bez zaśmiecania miksu.",
+                rack5_tag: "05 /// DELAY",
+                rack5_title: "DELAYED 2",
+                rack5_desc: "Odświeżony klasyczny delay z dwoma trybami: krótkie powtórzenia lub pojedyncze opóźnienie 60ms dla gładkiej, unikalnej tekstury. Minimalne obciążenie CPU, natychmiastowy charakter.",
+                rack6_tag: "06 /// DYSTORSJA",
+                rack6_title: "CRUSHY BOY 2",
+                rack6_desc: "Bitcrusher z dodanymi opcjami smaku: distortion, vibrato lub phaser. Wszechstronny do brudnych, teksturowanych brzmień.",
+                rack7_tag: "07 /// REVERB",
+                rack7_title: "ATMO",
+                rack7_desc: "Generator natychmiastowej atmosfery, który dodaje przestrzeni i ambientowej głębi do każdego utworu.",
+                rack8_tag: "08 /// REVERB",
+                rack8_title: "ROOMBOY 2",
+                rack8_desc: "Unikalny kreator przestrzeni, który sprawia, że dźwięki wydają się być lata świetlne stąd. Idealny do głębokich, odległych teł."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'pl' : 'en';
+            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'PL' : 'EN';
+
+            const elements = document.querySelectorAll('[data-lang]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+        }
+
+        // --- ANIMACJE ---
+        gsap.from(".glass-menu-container", {
+            y: -100,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.5
+        });
+
+        gsap.to("#heroImage", {
+            scrollTrigger: {
+                trigger: "body",      
+                start: "top top",     
+                end: "100vh top",
+                scrub: 1
+            },
+            rotateX: 30,
+            scale: 0.95,
+            y: 80,
+            opacity: 0.6,
+            transformOrigin: "center top",
+            ease: "none"
+        });
+
+        gsap.to(".anim-up", {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        gsap.from(".anim-fade", {
+            scrollTrigger: {
+                trigger: ".about-section",
+                start: "top 75%"
+            },
+            y: 30,
+            opacity: 0,
+            duration: 1
+        });
+
+        const items = document.querySelectorAll(".rack-item");
+        items.forEach((item) => {
+            gsap.to(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 85%", 
+                },
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+    </script>
+</body>
+</html>
