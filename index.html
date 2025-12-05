@@ -4,64 +4,298 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>what-is-next™</title>
-    <link rel="stylesheet" href="style.css">
     
-    <!-- ZMODYFIKOWANE STYLE DLA MENU -->
     <style>
+        @font-face {
+            font-family: 'Neue Haas Grotesk';
+            src: url('fonts/Neue Haas Grotesk Text Pro 65 Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #f0f1f3;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* --- STYLIZACJA MENU (NOWE) --- */
         .top-nav {
             position: fixed;
-            top: 20px; /* Lekki odstęp od samej góry */
+            top: 30px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Odstęp między przyciskami */
-            z-index: 1000;
-            pointer-events: none; /* Pozwala klikać "przez" pustą przestrzeń paska */
+            gap: 15px;
+            z-index: 2000; /* Powyżej wszystkiego */
+            pointer-events: none; /* Pozwala klikać obok przycisków */
         }
 
         .top-nav a {
-            pointer-events: auto; /* Przywraca klikalność linków */
+            pointer-events: auto;
             text-decoration: none;
-            color: #fff; /* Biały kolor bazowy (kluczowy dla trybu difference) */
-            font-size: 0.85rem;
-            text-transform: lowercase;
-            letter-spacing: 0.05em;
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 0.9rem;
             font-weight: 500;
-
-            /* TŁO I KSZTAŁT */
-            background: rgba(200, 200, 200, 0.15); /* Półprzezroczyste tło */
-            padding: 10px 24px;
-            border-radius: 30px; /* Mocno zaokrąglone rogi (kapsułka) */
+            text-transform: lowercase;
+            padding: 10px 20px;
+            border-radius: 50px; /* Zaokrąglony prostokąt */
             
-            /* EFEKT BLUR (ROZMYCIE TŁA) */
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px); /* Dla Safari */
+            /* KLUCZOWE USTAWIENIA DLA DIFFERENCE + BLUR */
+            color: #ffffff; /* Biały tekst bazowy, który się odwróci */
+            background-color: rgba(255, 255, 255, 0.2); /* Półprzezroczyste tło */
+            backdrop-filter: blur(10px); /* Rozmycie tła */
+            -webkit-backdrop-filter: blur(10px);
+            mix-blend-mode: difference; /* Odwracanie kolorów względem tła */
             
-            /* EFEKT DIFFERENCE */
-            mix-blend-mode: difference;
-            
-            /* PŁYNNE PRZEJŚCIA */
-            transition: transform 0.3s ease, background 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtelna ramka */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
         }
 
         .top-nav a:hover {
-            background: rgba(255, 255, 255, 0.4);
             transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.4);
             cursor: pointer;
         }
 
+        /* Responsywność menu */
         @media (max-width: 600px) {
             .top-nav {
-                top: 15px;
+                top: 20px;
                 gap: 10px;
             }
             .top-nav a {
                 padding: 8px 16px;
-                font-size: 0.75rem;
+                font-size: 0.8rem;
             }
+        }
+
+        /* --- RESZTA CSS --- */
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out;
+        }
+        #webgl-container.faded {
+            opacity: 0;
+        }
+        .custom-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #888;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-section {
+            height: 100vh;
+        }
+        .about-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 10vh 5vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('back.png');
+            background-size: cover;
+            background-position: center center;
+        }
+        .content-wrapper {
+            max-width: 700px;
+            text-align: center;
+        }
+        .content-wrapper h2 {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: #000000;
+            line-height: 1;
+            margin-bottom: 40px;
+            letter-spacing: -2px;
+            transition: color 0.5s ease;
+        }
+        .content-wrapper p {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            margin-bottom: 1.5em;
+            color: #000000;
+            transition: color 0.5s ease;
+        }
+        .content-wrapper p:last-child {
+            margin-bottom: 0;
+        }
+
+        .release-section {
+            background-color: #f0f1f3;
+            padding: 10vh 5vw;
+            text-align: center;
+            transition: background-color 0.5s ease;
+        }
+        .release-section h2 {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: #000000;
+            line-height: 1;
+            margin-bottom: 60px; 
+            letter-spacing: -2px;
+            transition: color 0.5s ease;
+        }
+        .release-link-wrapper {
+            display: inline-flex;
+            align-items: center;  
+            gap: 40px;            
+            text-decoration: none;
+        }
+        .release-cover {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .release-link-wrapper:hover .release-cover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        .release-info {
+            text-align: left;
+        }
+        .release-title {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 10px 0;
+            transition: color 0.5s ease;
+        }
+        .release-artist {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #555;
+            margin: 0;
+            transition: color 0.5s ease;
+        }
+
+        .contact-section {
+            background-color: #f0f1f3;
+            text-align: center;
+            padding: 10vh 5vw;
+            transition: background-color 0.5s ease;
+        }
+        .contact-section h2 {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 7rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: color 0.5s ease;
+        }
+        .contact-section p {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            margin-bottom: 1.5em;
+            color: #000000;
+            transition: color 0.5s ease;
+        }
+        .contact-section a {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease, color 0.5s ease;
+        }
+        .contact-section a:hover {
+            border-bottom-color: #1a1a1a;
+        }
+        #logo-source {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            z-index: -1;
+        }
+
+        #dark-mode-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #1a1a1a;
+            border-radius: 50%;
+            z-index: 1000;
+            cursor: pointer;
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+            mix-blend-mode: difference; /* Dodano, aby toggle też był zawsze widoczny */
+            background-color: transparent; /* Zmiana dla difference */
+            border-color: #fff; /* Zmiana dla difference */
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f0f1f3;
+        }
+        /* Toggle w trybie difference działa sam, ale zostawiamy style fallbackowe */
+        body.dark-mode #dark-mode-toggle {
+            /* border-color handled by mix-blend-mode */
+        }
+        body.dark-mode .content-wrapper h2,
+        body.dark-mode .content-wrapper p,
+        body.dark-mode .contact-section h2,
+        body.dark-mode .contact-section p {
+            color: #f0f1f3;
+        }
+
+        body.dark-mode .release-section {
+            background-color: #1a1a1a;
+        }
+        body.dark-mode .release-section h2,
+        body.dark-mode .release-title {
+            color: #f0f1f3;
+        }
+        body.dark-mode .release-artist {
+            color: #aaa; 
+        }
+
+        body.dark-mode .contact-section {
+            background-color: #1a1a1a;
+        }
+        body.dark-mode .contact-section a {
+            color: #f0f1f3;
+        }
+        body.dark-mode .contact-section a:hover {
+            border-bottom-color: #f0f1f3;
         }
     </style>
 </head>
@@ -135,7 +369,193 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        class LogoDistortionEffect {
+            constructor(container, sourceDivId) {
+                this.container = container;
+                this.sourceDiv = document.querySelector(sourceDivId);
+                this.config = {
+                    TEXTURE_RESOLUTION: 2048, distortionIntensity: 2.0, holdIntensity: 4.0, scale: 0.2, lerpFactor: 0.08
+                };
+                this.mouse = new THREE.Vector2(0, 0); this.targetMouse = new THREE.Vector2(0, 0); this.mouseVelocity = 0;
+                this.targetVelocity = 0; this.isMouseDown = false;
+            }
+
+            async init(initialSvgPath) {
+                try {
+                    await this.loadAndCreateTexture(initialSvgPath);
+                    this.setupScene(); this.createMesh(); this.addEventListeners(); this.animate();
+                } catch (error) {
+                    console.error("!!! KRYTYCZNY BŁĄD INICJALIZACJI:", error); this.displayError(error.message);
+                }
+            }
+
+            displayError(message) { this.container.innerHTML = `<div style="color: #c0392b; border: 2px solid #c0392b; background: #fbeae5; padding: 20px; max-width: 600px; text-align: left; font-family: monospace;"><h3>Wystąpił błąd!</h3><p><strong>Problem:</strong> ${message}</p></div>`; }
+
+
+            loadAndCreateTexture(svgPath) {
+                return new Promise(async (resolve, reject) => {
+                    try {
+            
+                        const response = await fetch(svgPath);
+                        if (!response.ok) throw new Error(`Nie udało się załadować pliku: ${svgPath}`);
+                    
+                        const svgText = await response.text(); 
+                        
+                        this.sourceDiv.innerHTML = svgText;
+                        
+                        const svgClone = this.sourceDiv.querySelector('svg').cloneNode(true);
+                        const textElements = svgClone.querySelectorAll('text, tspan');
+                        textElements.forEach(el => el.remove());
+
+                
+                        const fillColor = document.body.classList.contains('dark-mode') ? '#f0f1f3' : '#1a1a1a';
+                        const elementsToColor = svgClone.querySelectorAll('path, g, rect, circle');
+                        elementsToColor.forEach(el => el.setAttribute('fill', fillColor));
+                        
+                        const viewBox = svgClone.getAttribute('viewBox');
+                        if (!viewBox) throw new Error(`Plik ${svgPath} musi posiadać atrybut 'viewBox'!`);
+                        const parts = viewBox.split(' ').map(parseFloat);
+                        this.logoAspect = parts[2] / parts[3];
+                        
+                        let svgString = new XMLSerializer().serializeToString(svgClone);
+                        svgString = svgString.replace(/width=".*?"/g, '').replace(/height=".*?"/g, '');
+                        
+                        const img = new Image();
+                        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                        const url = URL.createObjectURL(svgBlob);
+                        
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const textureWidth = this.config.TEXTURE_RESOLUTION;
+                            canvas.width = textureWidth; canvas.height = Math.round(textureWidth / this.logoAspect);
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            this.texture = new THREE.CanvasTexture(canvas);
+                            URL.revokeObjectURL(url);
+                            resolve();
+                        };
+                        img.onerror = () => reject(new Error(`Nie udało się załadować ${svgPath} jako obrazka.`));
+                        img.src = url;
+                    } catch (error) { reject(error); }
+                });
+            }
+
+
+            async changeLogo(newSvgPath) {
+                try {
+                    await this.loadAndCreateTexture(newSvgPath);
+                    this.material.uniforms.u_texture.value = this.texture;
+                    this.onResize();
+                } catch (error) {
+                    console.error("Błąd podczas zmiany logo:", error);
+                    this.displayError(error.message);
+                }
+            }
+
+            setupScene() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+                this.camera.position.z = 2;
+                this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.container.appendChild(this.renderer.domElement);
+            }
+            createMesh() {
+                const distance = this.camera.position.z;
+                const visibleHeight = 2 * Math.tan((this.camera.fov * Math.PI) / 360) * distance;
+                const visibleWidth = visibleHeight * this.camera.aspect;
+                let planeWidth, planeHeight;
+                if (visibleWidth / visibleHeight > this.logoAspect) {
+                    planeHeight = visibleHeight;
+                    planeWidth = visibleHeight * this.logoAspect;
+                } else {
+                    planeWidth = visibleWidth;
+                    planeHeight = visibleWidth / this.logoAspect;
+                }
+                const scale = 0.8;
+                this.geometry = new THREE.PlaneBufferGeometry(planeWidth * scale, planeHeight * scale, 64, 64);
+                this.material = new THREE.ShaderMaterial({
+                    uniforms: { u_texture: { value: this.texture }, u_mouse: { value: this.mouse }, u_velocity: { value: 0 }, u_scale: { value: this.config.scale }, },
+                    vertexShader: `varying vec2 v_uv; void main() { v_uv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+                    fragmentShader: `uniform sampler2D u_texture; uniform vec2 u_mouse; uniform float u_velocity; uniform float u_scale; varying vec2 v_uv; void main() { vec2 uv = v_uv; vec2 from_mouse = uv - u_mouse; float distance = length(from_mouse); float distortion_power = 1.0 - smoothstep(0.0, u_scale, distance); vec2 distorted_uv = uv + normalize(from_mouse) * distortion_power * u_velocity * 0.1; vec4 final_color = texture2D(u_texture, distorted_uv); if (final_color.a < 0.1) discard; gl_FragColor = final_color; }`,
+                    transparent: true
+                });
+                this.mesh = new THREE.Mesh(this.geometry, this.material);
+                this.scene.add(this.mesh);
+            }
+            addEventListeners() {
+                const cursorEl = document.querySelector('.custom-cursor');
+                window.addEventListener('mousemove', e => {
+                    if (this.mesh) {
+                        const rect = this.renderer.domElement.getBoundingClientRect();
+                        this.targetMouse.set((e.clientX - rect.left) / rect.width, 1.0 - ((e.clientY - rect.top) / rect.height));
+                    }
+                    if (cursorEl) cursorEl.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+                });
+                window.addEventListener('mousedown', () => this.isMouseDown = true);
+                window.addEventListener('mouseup', () => this.isMouseDown = false);
+                window.addEventListener('resize', () => this.onResize());
+            }
+            onResize() {
+                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+                this.camera.updateProjectionMatrix();
+                if (this.mesh) this.scene.remove(this.mesh);
+                if (this.geometry) this.geometry.dispose();
+                this.createMesh();
+            }
+            animate() {
+                this.mouse.lerp(this.targetMouse, this.config.lerpFactor);
+                const velocity = this.targetMouse.distanceTo(this.mouse);
+                this.targetVelocity = this.isMouseDown ? this.config.holdIntensity : velocity * this.config.distortionIntensity;
+                this.mouseVelocity += (this.targetVelocity - this.mouseVelocity) * this.config.lerpFactor;
+                if (this.material) { this.material.uniforms.u_mouse.value = this.mouse; this.material.uniforms.u_velocity.value = this.mouseVelocity; }
+                this.renderer.render(this.scene, this.camera);
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            let logoEffect;
+
+            const toggleDarkMode = () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                if (isDarkMode) {
+                    localStorage.setItem('theme', 'dark');
+                    if(logoEffect) logoEffect.changeLogo('logo2.svg');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    if(logoEffect) logoEffect.changeLogo('logo.svg');
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme');
+            const initialLogoPath = savedTheme === 'dark' ? 'logo2.svg' : 'logo.svg';
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            logoEffect = new LogoDistortionEffect(document.querySelector('#webgl-container'), '#logo-source');
+            logoEffect.init(initialLogoPath);
+
+            toggleButton.addEventListener('click', toggleDarkMode);
+
+            const webglContainer = document.getElementById('webgl-container');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > window.innerHeight * 0.3) {
+                    webglContainer.classList.add('faded');
+                } else {
+                    webglContainer.classList.remove('faded');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
