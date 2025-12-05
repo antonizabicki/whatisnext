@@ -5,8 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>what-is-next™</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .menu-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        .menu-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-bar a:hover {
+            opacity: 0.6;
+        }
+        
+        body {
+            padding-top: 50px;
+        }
+    </style>
 </head>
 <body>
+
+    <nav class="menu-bar">
+        <a href="https://mugo.lnk.to/believequei" target="_blank" rel="noopener noreferrer">newest release</a>
+        <a href="https://what-is-next.vip/creative" target="_blank" rel="noopener noreferrer">creative</a>
+    </nav>
 
     <div id="dark-mode-toggle" title="Toggle dark mode"></div>
     <div id="webgl-container"></div>
@@ -28,7 +65,7 @@
                     the <strong>"powered by what-is-next™"</strong> initiative exists to empower both artists and independent ideas, offering the tools, structure, and visibility needed to grow and break through.
                 </p>
                 <p>
-                    we’re not just a label - we’re a platform for creators, concepts, and movements that aim to shape what is next.
+                    we're not just a label - we're a platform for creators, concepts, and movements that aim to shape what is next.
                 </p>
             </div>
         </section>
@@ -74,4 +111,3 @@
 </body>
 
 </html>
-
