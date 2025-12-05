@@ -6,54 +6,68 @@
     <title>what-is-next™</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- DODANE STYLE DLA GÓRNEGO MENU -->
+    <!-- ZMODYFIKOWANE STYLE DLA MENU -->
     <style>
         .top-nav {
             position: fixed;
-            top: 0;
+            top: 20px; /* Lekki odstęp od samej góry */
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px; /* Odstęp między linkami */
-            padding: 25px 0;
-            z-index: 1000; /* Zapewnia, że menu jest nad animacją WebGL */
-            pointer-events: auto;
+            gap: 20px; /* Odstęp między przyciskami */
+            z-index: 1000;
+            pointer-events: none; /* Pozwala klikać "przez" pustą przestrzeń paska */
         }
 
         .top-nav a {
+            pointer-events: auto; /* Przywraca klikalność linków */
             text-decoration: none;
-            color: inherit; /* Dziedziczy kolor tekstu (zależnie od trybu jasny/ciemny) */
-            font-size: 1rem;
-            text-transform: lowercase; /* Pasuje do stylu "about", "music" */
+            color: #fff; /* Biały kolor bazowy (kluczowy dla trybu difference) */
+            font-size: 0.85rem;
+            text-transform: lowercase;
             letter-spacing: 0.05em;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-            /* Opcjonalnie: mix-blend-mode sprawia, że tekst jest czytelny na każdym tle */
-            mix-blend-mode: difference; 
-            color: #fff; /* Kolor bazowy dla mix-blend-mode */
+            font-weight: 500;
+
+            /* TŁO I KSZTAŁT */
+            background: rgba(200, 200, 200, 0.15); /* Półprzezroczyste tło */
+            padding: 10px 24px;
+            border-radius: 30px; /* Mocno zaokrąglone rogi (kapsułka) */
+            
+            /* EFEKT BLUR (ROZMYCIE TŁA) */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); /* Dla Safari */
+            
+            /* EFEKT DIFFERENCE */
+            mix-blend-mode: difference;
+            
+            /* PŁYNNE PRZEJŚCIA */
+            transition: transform 0.3s ease, background 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtelna ramka */
         }
 
         .top-nav a:hover {
-            opacity: 1;
-            text-decoration: underline;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+            cursor: pointer;
         }
 
         @media (max-width: 600px) {
             .top-nav {
-                gap: 20px;
-                padding: 15px 0;
+                top: 15px;
+                gap: 10px;
             }
             .top-nav a {
-                font-size: 0.9rem;
+                padding: 8px 16px;
+                font-size: 0.75rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- DODANE GÓRNE MENU -->
+    <!-- GÓRNE MENU -->
     <nav class="top-nav">
         <a href="https://mugo.lnk.to/believequei" target="_blank" rel="noopener noreferrer">newest release</a>
         <a href="https://what-is-next.vip/creative">creative</a>
