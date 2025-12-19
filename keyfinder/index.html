@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools | what-is-next</title>
+    
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+        /* --- RESET I BAZA --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- TŁO (BACKGROUND FX) --- */
+        .ambient-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            overflow: hidden; background: #050505; pointer-events: none;
+        }
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.08;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: white; animation-duration: 25s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #444; animation-duration: 30s; animation-direction: alternate-reverse; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #222; opacity: 0.12; filter: blur(80px); animation-name: float-center; animation-duration: 35s; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 80px) scale(1.1); } }
+        @keyframes float-center { 0% { transform: translate(-100px, -50px) rotate(0deg); } 100% { transform: translate(100px, 50px) rotate(20deg); } }
+
+        section, header, footer { scroll-margin-top: 120px; }
+
+        /* --- MENU BAR --- */
+        .glass-menu-container {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100;
+            width: 90%; max-width: 600px;
+        }
+        .glass-menu {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.6rem 1.5rem; background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9999px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .menu-left, .menu-right { display: flex; align-items: center; gap: 2rem; }
+        .menu-link { color: #aaa; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; }
+        .menu-link:hover { color: white; }
+
+        /* --- HEADER & TYPO --- */
+        header { text-align: center; padding: 8rem 2rem 2rem 2rem; position: relative; z-index: 10; }
+        h1 {
+            font-size: clamp(3rem, 7vw, 6rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em;
+            background: linear-gradient(to bottom, #ffffff, #888888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3em; color: #888; margin-bottom: 1.5rem; font-weight: 500; }
+        p { color: #a1a1a1; line-height: 1.5; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* --- TOOLS CONTAINER --- */
+        .tools-section {
+            max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem 2rem;
+            display: flex; flex-direction: column; gap: 4rem;
+        }
+
+        /* --- PITCH CALCULATOR (Teraz na górze) --- */
+        .pitch-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            opacity: 1; /* Było 0.8, teraz w pełni widoczne */
+            transition: opacity 0.3s;
+        }
+
+        .result-display { margin-bottom: 1.5rem; }
+        .semitone-count { font-size: 4rem; font-weight: 800; line-height: 1; display: block; margin-bottom: 0.5rem; }
+        .result-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: #888; }
+        .highlight { color: #fff; font-weight: bold; }
+
+        /* Piano UI */
+        .piano-wrapper { display: inline-block; position: relative; margin: 1.5rem 0; user-select: none; }
+        .piano-keys { display: flex; position: relative; }
+        .key {
+            width: 35px; height: 120px; background: #e0e0e0; border: 1px solid #000;
+            border-radius: 0 0 4px 4px; cursor: pointer; transition: background 0.1s;
+            position: relative; z-index: 1;
+        }
+        .key:active { background: #ccc; }
+        .key.black {
+            width: 24px; height: 75px; background: #111; position: absolute; top: 0; z-index: 2;
+            border-radius: 0 0 4px 4px; border: 1px solid #000;
+        }
+        .key.active-root { background: #4CAF50 !important; box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); }
+        .key.black.active-root { background: #2E7D32 !important; }
+
+        .controls-row { display: flex; align-items: center; justify-content: center; gap: 2rem; margin-top: 1rem; }
+        .adjust-btn {
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem;
+            cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .adjust-btn:hover { background: rgba(255,255,255,0.2); }
+        .switch-container { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.8rem; }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+
+        /* --- TUNEBAT SEARCH (KEY FINDER) --- */
+        .tunebat-section {
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Wyśrodkowanie w osi poziomej */
+            text-align: center; /* Wyśrodkowanie tekstu */
+            background: rgba(20, 20, 20, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px; 
+            padding: 4rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .search-title { font-size: 1.8rem; margin-bottom: 0.3rem; font-weight: 600; color: white; text-transform: uppercase; }
+        .search-desc { font-size: 0.9rem; margin-bottom: 3rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .tunebat-form { width: 100%; max-width: 600px; /* Ograniczenie szerokości forma, żeby wyglądał estetycznie */ }
+        
+        .input-group { 
+            position: relative; 
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group:focus-within {
+            border-bottom-color: rgba(255,255,255,0.6);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            background: transparent; 
+            border: none; 
+            color: white; 
+            font-size: 1.4rem; 
+            padding: 10px 0; 
+            outline: none; 
+            font-weight: 500;
+            text-transform: uppercase;
+            text-align: left;
+        }
+        
+        .search-input::placeholder { color: #444; }
+
+        .search-btn {
+            background: white; 
+            border: none; 
+            width: 50px; /* Większe, żeby zrobić ładne koło */
+            height: 50px; 
+            border-radius: 50%; /* Okrągły przycisk */
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        
+        .search-btn:hover {
+            background: #eee;
+            transform: scale(1.05);
+        }
+
+        .search-btn svg { width: 20px; height: 20px; stroke: black; stroke-width: 2.5; }
+
+        @media (max-width: 768px) {
+            .tunebat-section { padding: 2rem; }
+            .search-input { font-size: 1rem; }
+            .search-btn { width: 40px; height: 40px; }
+        }
+
+        /* --- CIRCLE IMAGE SECTION --- */
+        .circle-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 6rem 2rem;
+        }
+        .circle-image-wrapper {
+            max-width: 600px;
+            width: 100%;
+            opacity: 0.7;
+            transition: opacity 0.5s;
+        }
+        .circle-image-wrapper:hover { opacity: 1; }
+        .circle-image-wrapper img {
+            width: 100%; height: auto; display: block;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.3));
+        }
+
+        /* --- FOOTER --- */
+        footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); background: #050505; position: relative; z-index: 20; }
+        .anim-up { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="ambient-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- MENU BAR -->
+    <div class="glass-menu-container">
+        <nav class="glass-menu">
+            <div class="menu-left">
+                <a href="https://what-is-next.vip/creative" class="menu-link">Home</a>
+                <a href="#keyfinder" class="menu-link">Key Finder</a>
+            </div>
+            <div class="menu-right">
+                <a href="mailto:demo@what-is-next.vip" class="menu-link">Contact</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HEADER -->
+    <header id="top">
+        <div class="header-content">
+            <h2 class="anim-up">what-is-next creative</h2>
+            <h1 class="anim-up">Key Finder</h1>
+            <p class="anim-up">Simple tools to accelerate your pitching workflow.</p>
+        </div>
+    </header>
+
+    <!-- TOOLS SECTION -->
+    <section class="tools-section">
+
+        <!-- 1. PITCH CALCULATOR (TERAZ PIERWSZY) -->
+        <div id="pitcher" class="pitch-container anim-fade">
+            <h4 style="margin-bottom: 0.5rem; color: #666; font-size: 0.8rem; letter-spacing: 2px;">PITCH CALCULATOR</h4>
+            <div class="result-display">
+                <span class="semitone-count" id="semitoneDisplay">0</span>
+                <span class="result-text">SEMITONES FROM <span id="startNoteDisplay" class="highlight">C</span> TO <span id="targetNoteDisplay" class="highlight">C</span></span>
+            </div>
+
+            <!-- Piano Interface -->
+            <div class="piano-wrapper">
+                <div class="piano-keys" id="piano"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls-row">
+                <div style="text-align:center">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button class="adjust-btn" onclick="adjustTarget(-1)">-</button>
+                        <button class="adjust-btn" onclick="adjustTarget(1)">+</button>
+                    </div>
+                </div>
+                <div class="switch-container">
+                    <span id="goUpLabel" style="color: #4CAF50;">UP</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="directionSwitch" onchange="calculatePitch()">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="goDownLabel" style="color: #666;">DOWN</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. KEY FINDER (TERAZ DRUGI, WYŚRODKOWANY) -->
+        <div id="keyfinder" class="tunebat-section anim-fade">
+            <h3 class="search-title">Find Key of Any Song</h3>
+            <p class="search-desc">(USING TUNEBAT)</p>
+            
+            <form id="tunebatForm" class="tunebat-form" onsubmit="searchTunebat(event)">
+                <div class="input-group">
+                    <input type="text" id="songInput" class="search-input" placeholder="ENTER ARTIST AND TITLE..." autocomplete="off">
+                    <button type="submit" class="search-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </section>
+
+    <!-- 3. CIRCLE IMAGE SECTION (NA DOLE) -->
+    <section class="circle-section anim-fade">
+        <div class="circle-image-wrapper">
+            <!-- Pamiętaj o pliku circle.png w folderze -->
+            <img src="circle.png" alt="Camelot Wheel" onerror="this.src='https://mixedinkey.com/wp-content/uploads/2020/09/Camelot-Wheel-1024x1024.png'">
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #444;">© 2025 what-is-next™</p>
+    </footer>
+
+    <!-- LOGIKA JS -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- ANIMATIONS ---
+        gsap.to(".anim-up", {
+            y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out"
+        });
+
+        const fadeItems = document.querySelectorAll(".anim-fade");
+        fadeItems.forEach(item => {
+            gsap.from(item, {
+                scrollTrigger: { trigger: item, start: "top 90%" },
+                y: 30, opacity: 0, duration: 0.8, ease: "power2.out"
+            });
+        });
+
+        // --- PITCH CALCULATOR LOGIC ---
+        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        let startIndex = 0; 
+        let targetIndex = 0; 
+        const pianoContainer = document.getElementById('piano');
+
+        function renderPiano() {
+            pianoContainer.innerHTML = '';
+            const keyMap = [
+                { note: 'C', type: 'white', idx: 0 },
+                { note: 'C#', type: 'black', idx: 1, left: 24 },
+                { note: 'D', type: 'white', idx: 2 },
+                { note: 'D#', type: 'black', idx: 3, left: 59 },
+                { note: 'E', type: 'white', idx: 4 },
+                { note: 'F', type: 'white', idx: 5 },
+                { note: 'F#', type: 'black', idx: 6, left: 129 },
+                { note: 'G', type: 'white', idx: 7 },
+                { note: 'G#', type: 'black', idx: 8, left: 164 },
+                { note: 'A', type: 'white', idx: 9 },
+                { note: 'A#', type: 'black', idx: 10, left: 199 },
+                { note: 'B', type: 'white', idx: 11 }
+            ];
+
+            keyMap.filter(k => k.type === 'white').forEach(k => {
+                const el = document.createElement('div');
+                el.className = `key ${startIndex === k.idx ? 'active-root' : ''}`;
+                el.onclick = () => setStartNote(k.idx);
+                pianoContainer.appendChild(el);
+            });
+
+            keyMap.filter(k => k.type === 'black').forEach(k => {
+                const el = document.createElement('div');
+                el.className = `key black ${startIndex === k.idx ? 'active-root' : ''}`;
+                el.style.left = k.left + 'px';
+                el.onclick = () => setStartNote(k.idx);
+                pianoContainer.appendChild(el);
+            });
+        }
+
+        function setStartNote(idx) {
+            startIndex = idx;
+            renderPiano();
+            calculatePitch();
+        }
+
+        function adjustTarget(amount) {
+            targetIndex = (targetIndex + amount);
+            if (targetIndex < 0) targetIndex = 11;
+            if (targetIndex > 11) targetIndex = 0;
+            calculatePitch();
+        }
+
+        function calculatePitch() {
+            const isDown = document.getElementById('directionSwitch').checked;
+            document.getElementById('goUpLabel').style.color = isDown ? '#666' : '#4CAF50';
+            document.getElementById('goDownLabel').style.color = isDown ? '#4CAF50' : '#666';
+
+            let diff;
+            if (!isDown) {
+                if (targetIndex >= startIndex) diff = targetIndex - startIndex;
+                else diff = 12 - (startIndex - targetIndex);
+            } else {
+                if (targetIndex <= startIndex) diff = targetIndex - startIndex;
+                else diff = -(12 - (targetIndex - startIndex));
+            }
+
+            document.getElementById('semitoneDisplay').innerText = diff;
+            document.getElementById('startNoteDisplay').innerText = notes[startIndex];
+            document.getElementById('targetNoteDisplay').innerText = notes[targetIndex];
+        }
+
+        renderPiano();
+
+        // --- TUNEBAT SEARCH LOGIC ---
+        function searchTunebat(e) {
+            e.preventDefault();
+            const query = document.getElementById('songInput').value.trim();
+            const baseUrl = "https://tunebat.com/Search?q=";
+            if(query) {
+                const encodedQuery = encodeURIComponent(query);
+                window.open(baseUrl + encodedQuery, '_blank');
+            } else {
+                window.open(baseUrl, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
