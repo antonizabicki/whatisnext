@@ -106,7 +106,7 @@
             transform: translateX(-50%);
             z-index: 100;
             width: 90%;
-            max-width: 700px;
+            max-width: 750px; /* Nieznacznie poszerzone dla nowych elementów */
         }
 
         .glass-menu {
@@ -139,10 +139,34 @@
             font-size: 0.9rem;
             font-weight: 500;
             transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
         }
 
         .menu-link:hover {
             color: white;
+        }
+
+        /* Styl ikonki YouTube */
+        .yt-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            display: block;
+        }
+
+        /* Styl dla badge NEW */
+        .badge-new {
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-left: 6px;
+            position: relative;
+            top: -1px;
+            letter-spacing: 0.5px;
         }
 
         .lang-btn {
@@ -403,10 +427,22 @@
         <nav class="glass-menu">
             <div class="menu-left">
                 <a href="#top" class="menu-link" data-lang="nav_home">Home</a>
-                <a href="#about" class="menu-link hide-mobile" data-lang="nav_about">About</a>
+                <!-- USUNIĘTO ABOUT -->
                 <a href="#racks" class="menu-link hide-mobile" data-lang="nav_racks">Racks</a>
+                <!-- DODANO KEY FINDER -->
+                <a href="https://what-is-next.vip/keyfinder/" class="menu-link hide-mobile">
+                    <span data-lang="nav_keyfinder">Key Finder</span> 
+                    <span class="badge-new">NEW</span>
+                </a>
             </div>
             <div class="menu-right">
+                <!-- DODANO YOUTUBE -->
+                <a href="https://www.youtube.com/@what-is-next-label" target="_blank" class="menu-link yt-icon" aria-label="YouTube">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                </a>
+                
                 <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">PL</button>
                 <a href="mailto:demo@what-is-next.vip" class="menu-link" data-lang="nav_contact">Contact</a>
                 <a href="https://quei.gumroad.com/l/rackpack" target="_blank" class="menu-download-btn" data-lang="nav_download">Download</a>
@@ -430,7 +466,7 @@
         </div>
     </div>
 
-    <!-- ABOUT -->
+    <!-- ABOUT (Sekcja została w treści strony, usunięto tylko z menu) -->
     <section class="about-section" id="about">
         <div class="anim-fade">
             <h3 data-lang="about_title">About</h3> 
@@ -563,6 +599,7 @@
                 nav_home: "Home",
                 nav_about: "About",
                 nav_racks: "Racks",
+                nav_keyfinder: "Key Finder", // Dodano
                 nav_contact: "Contact",
                 nav_download: "Download",
                 hero_title: "The tools that elevate your sound\nand accelerate your workflow.",
@@ -603,9 +640,10 @@
             },
             pl: {
                 // UI
-                nav_home: "Start",
+                nav_home: "Home",
                 nav_about: "O nas",
-                nav_racks: "Urządzenia",
+                nav_racks: "Racks",
+                nav_keyfinder: "Key Finder", // Dodano (zazwyczaj nie tłumaczy się nazw własnych/narzędzi w produkcji audio, ew. "Wykrywacz Tonacji")
                 nav_contact: "Kontakt",
                 nav_download: "Pobierz",
                 hero_title: "Narzędzia, które podniosą Twój dźwięk\ni przyspieszą pracę.",
