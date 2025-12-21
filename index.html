@@ -30,7 +30,7 @@
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* --- STYLIZACJA MENU (NOWE) --- */
+        /* --- STYLIZACJA MENU (POPRAWIONA) --- */
         .top-nav {
             position: fixed;
             top: 30px;
@@ -40,8 +40,8 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            z-index: 2000; /* Powyżej wszystkiego */
-            pointer-events: none; /* Pozwala klikać obok przycisków */
+            z-index: 2000;
+            pointer-events: none;
         }
 
         .top-nav a {
@@ -52,23 +52,35 @@
             font-weight: 500;
             text-transform: lowercase;
             padding: 10px 20px;
-            border-radius: 50px; /* Zaokrąglony prostokąt */
+            border-radius: 50px;
             
-            /* KLUCZOWE USTAWIENIA DLA DIFFERENCE + BLUR */
-            color: #ffffff; /* Biały tekst bazowy, który się odwróci */
-            background-color: rgba(255, 255, 255, 0.2); /* Półprzezroczyste tło */
-            backdrop-filter: blur(10px); /* Rozmycie tła */
+            /* --- TRYB JASNY (DOMYŚLNY) - CZARNE PRZYCISKI --- */
+            color: #1a1a1a; /* Ciemny tekst */
+            background-color: rgba(0, 0, 0, 0.05); /* Delikatne ciemne tło */
+            border: 1px solid rgba(0, 0, 0, 0.1); /* Delikatna ramka */
+            
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            mix-blend-mode: difference; /* Odwracanie kolorów względem tła */
             
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
+            /* Usunięto mix-blend-mode: difference dla lepszej czytelności */
+            transition: transform 0.3s ease, color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
         }
 
         .top-nav a:hover {
             transform: scale(1.05);
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(0, 0, 0, 0.1); /* Ciemniejsze przy hover w trybie jasnym */
             cursor: pointer;
+        }
+
+        /* --- TRYB CIEMNY (DARK MODE) - BIAŁE PRZYCISKI --- */
+        body.dark-mode .top-nav a {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .top-nav a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
         }
 
         /* Responsywność menu */
@@ -257,19 +269,16 @@
             z-index: 1000;
             cursor: pointer;
             transition: background-color 0.5s ease, border-color 0.5s ease;
-            mix-blend-mode: difference; /* Dodano, aby toggle też był zawsze widoczny */
-            background-color: transparent; /* Zmiana dla difference */
-            border-color: #fff; /* Zmiana dla difference */
+            mix-blend-mode: difference;
+            background-color: transparent;
+            border-color: #fff;
         }
         
         body.dark-mode {
             background-color: #1a1a1a;
             color: #f0f1f3;
         }
-        /* Toggle w trybie difference działa sam, ale zostawiamy style fallbackowe */
-        body.dark-mode #dark-mode-toggle {
-            /* border-color handled by mix-blend-mode */
-        }
+        
         body.dark-mode .content-wrapper h2,
         body.dark-mode .content-wrapper p,
         body.dark-mode .contact-section h2,
