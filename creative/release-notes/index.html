@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Notes - what-is-next creative</title>
+    
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* --- RESET I BAZA (ZGODNE Z HOMEPAGE) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: #050505; color: #ffffff; overflow-x: hidden; min-height: 100vh; }
+
+        /* --- TŁO --- */
+        .ambient-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.08; animation: float 20s infinite alternate ease-in-out; }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: white; animation-duration: 25s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #444; animation-duration: 30s; animation-direction: alternate-reverse; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 80px) scale(1.1); } }
+
+        /* --- MENU --- */
+        .glass-menu-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; width: 90%; max-width: 750px; }
+        .glass-menu { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; background: rgba(20, 20, 20, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9999px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .menu-left, .menu-right { display: flex; align-items: center; gap: 1.5rem; }
+        .menu-left { padding-left: 1rem; }
+        .menu-link { color: #aaa; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; }
+        .menu-link:hover { color: white; }
+        .menu-download-btn { background: white; color: black; text-decoration: none; padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; transition: transform 0.2s, background 0.2s; }
+        .menu-download-btn:hover { background: #ddd; transform: scale(1.05); }
+
+        /* --- TYPOGRAFIA I NAGŁÓWEK --- */
+        header { text-align: center; padding: 8rem 2rem 4rem 2rem; }
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(to bottom, #ffffff, #888888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3em; color: #888; margin-bottom: 1rem; font-weight: 500; }
+        
+        /* --- SEKCJA RELEASE NOTES --- */
+        .updates-container { max-width: 800px; margin: 0 auto; padding: 0 2rem 6rem 2rem; display: flex; flex-direction: column; gap: 4rem; position: relative; }
+        
+        /* Linia łącząca (opcjonalna, subtelna) */
+        .updates-container::before {
+            content: ''; position: absolute; left: 2rem; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+            display: none; /* Ukryta na mobile, można włączyć */
+        }
+
+        .update-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            opacity: 0; transform: translateY(30px); /* Stan początkowy do animacji */
+            transition: border-color 0.3s ease;
+        }
+
+        .update-card:hover { border-color: rgba(255, 255, 255, 0.15); }
+
+        .update-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; }
+        .update-date { font-family: monospace; color: #666; font-size: 0.9rem; }
+        .update-version { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; font-weight: 700; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; }
+
+        .update-title { font-size: 1.8rem; color: white; margin-bottom: 1.5rem; font-weight: 600; }
+        .update-desc { color: #aaa; line-height: 1.6; font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+        /* Lista zmian */
+        .changelog-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+        .changelog-item { display: flex; align-items: flex-start; gap: 1rem; font-size: 1rem; color: #ccc; line-height: 1.5; }
+        
+        /* Odznaki typów zmian */
+        .badge { font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; margin-top: 3px; }
+        .badge.fixed { background: rgba(255, 100, 100, 0.15); color: #ff8888; border: 1px solid rgba(255, 100, 100, 0.2); }
+        .badge.new { background: rgba(100, 255, 150, 0.15); color: #88ffaa; border: 1px solid rgba(100, 255, 150, 0.2); }
+        .badge.release { background: rgba(255, 255, 255, 0.2); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); }
+
+        @media (max-width: 600px) {
+            .glass-menu-container { width: 95%; }
+            .menu-left, .menu-right { gap: 0.8rem; }
+            h1 { font-size: 2.2rem; }
+            .update-card { padding: 1.5rem; }
+            .update-title { font-size: 1.4rem; }
+            .changelog-item { flex-direction: column; gap: 0.3rem; }
+        }
+
+        /* --- STÓPKA --- */
+        footer { text-align: center; padding: 4rem 2rem; color: #444; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+        .anim-up { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+    <!-- TŁO -->
+    <div class="ambient-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- MENU -->
+    <div class="glass-menu-container">
+        <nav class="glass-menu">
+            <div class="menu-left">
+                <a href="https://what-is-next.vip/creative" class="menu-link">Home</a>
+
+            </div>
+            <div class="menu-right">
+                <a href="mailto:demo@what-is-next.vip" class="menu-link">Contact</a>
+     
+            </div>
+        </nav>
+    </div>
+
+    <!-- NAGŁÓWEK -->
+    <header>
+        <h2 class="anim-up">Changelog</h2>
+        <h1 class="anim-up">Release Notes</h1>
+        <p class="anim-up" style="color: #666; max-width: 500px; margin: 1rem auto;">
+            Track the evolution of the WINC™ tools ecosystem.
+        </p>
+    </header>
+
+    <!-- KONTENER NA UPDATE'Y (Wypełniany przez JS) -->
+    <div class="updates-container" id="updatesList">
+        <!-- Tutaj skrypt wstrzyknie kafelki z update'ami -->
+    </div>
+
+    <footer>
+        © 2025 WHAT-IS-NEXT™ CREATIVE
+    </footer>
+
+    <!-- LOGIKA I DANE -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ==========================================
+        // KONFIGURACJA: DODAJ NOWE UPDATE'Y TUTAJ!
+        // ==========================================
+        // Wystarczy skopiować obiekt { ... } i wkleić go na górze listy.
+        
+        const releaseData = [
+            {
+                version: "UPDATE 1.1",
+                title: "RACK PACK VOL. 1",
+                date: "21.12.2025",
+                desc: "", // Opcjonalny opis pod tytułem (jeśli pusty, nie wyświetli się)
+                changes: [
+                    { type: "fixed", text: "Fixed an issue where ATMO did not load as dry on the default preset" },
+                    { type: "fixed", text: "Fixed the Vibrato knob in CRUSHY BOY 2" },
+                    { type: "fixed", text: "Fixed the default R3VARB 2 preset to 6.07s on startup (previously 60s)" }
+                ]
+            },
+            {
+                version: "RELEASE",
+                title: "STUDIO TOOLS",
+                date: "20.12.2025",
+                desc: "Simple tools designed to accelerate your workflow.",
+                changes: [] // Pusta lista jeśli to tylko ogłoszenie
+            },
+            {
+                version: "RELEASE",
+                title: "RACK PACK VOL. 1",
+                date: "01.12.2025",
+                desc: "Introducing WINC™ Ableton Live Rack Pack - a curated set of free Ableton racks designed for precision, speed, and a modern production workflow.",
+                changes: []
+            }
+        ];
+
+        // ==========================================
+        // RENDEROWANIE (Nie musisz tego ruszać)
+        // ==========================================
+
+        const container = document.getElementById('updatesList');
+
+        function renderUpdates() {
+            let html = '';
+            
+            releaseData.forEach((update, index) => {
+                // Generowanie listy zmian (jeśli są)
+                let changesHtml = '';
+                if (update.changes && update.changes.length > 0) {
+                    changesHtml = '<ul class="changelog-list">';
+                    update.changes.forEach(change => {
+                        // Klasa badge'a zależy od typu (fixed, new, release)
+                        const badgeClass = change.type.toLowerCase(); 
+                        changesHtml += `
+                            <li class="changelog-item">
+                                <span class="badge ${badgeClass}">${change.type}</span>
+                                <span>${change.text}</span>
+                            </li>
+                        `;
+                    });
+                    changesHtml += '</ul>';
+                }
+
+                // Generowanie opisu (jeśli jest)
+                const descHtml = update.desc ? `<p class="update-desc">${update.desc}</p>` : '';
+
+                // Składanie całego kafelka
+                html += `
+                    <div class="update-card" id="update-${index}">
+                        <div class="update-meta">
+                            <span class="update-version">${update.version}</span>
+                            <span class="update-date">${update.date}</span>
+                        </div>
+                        <h3 class="update-title">${update.title}</h3>
+                        ${descHtml}
+                        ${changesHtml}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            initAnimations();
+        }
+
+        // Animacje po wyrenderowaniu
+        function initAnimations() {
+            // Header animation
+            gsap.to(".anim-up", {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power3.out"
+            });
+
+            // Menu animation
+            gsap.from(".glass-menu-container", {
+                y: -100,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                delay: 0.5
+            });
+
+            // Update Cards animation (scroll trigger)
+            const cards = document.querySelectorAll('.update-card');
+            cards.forEach(card => {
+                gsap.to(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%", // Start gdy góra elementu jest w 90% wysokości okna
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // Odpalenie
+        renderUpdates();
+
+    </script>
+</body>
+</html>
