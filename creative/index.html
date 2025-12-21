@@ -251,6 +251,30 @@
             z-index: 10;
         }
 
+        /* NOWY STYL PRZYCISKU RELEASE NOTES */
+        .release-notes-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.7rem 1.4rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+        }
+
+        .release-notes-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
         /* --- HERO IMAGE --- */
         .perspective-container {
             width: 100%;
@@ -434,6 +458,7 @@
                     <span data-lang="nav_keyfinder">Tools</span> 
                     <span class="badge-new">NEW</span>
                 </a>
+             
             </div>
             <div class="menu-right">
                 <!-- DODANO YOUTUBE -->
@@ -456,6 +481,11 @@
             <h2 class="anim-up">what-is-next creative</h2>
             <h1 class="anim-up" data-lang="hero_title">The tools that elevate your sound<br> and accelerate your workflow.</h1>
             <p class="anim-up" data-lang="hero_desc">A curated set of free Ableton racks designed for precision, speed, and a modern production workflow.</p>
+            
+            <!-- NOWY PRZYCISK: RELEASE NOTES -->
+            <a href="https://what-is-next.vip/creative/release-notes/" class="release-notes-btn anim-up">
+                Update 1.1 - Release Notes
+            </a>
         </div>
     </header>
 
@@ -599,7 +629,7 @@
                 nav_home: "Home",
                 nav_about: "About",
                 nav_racks: "Racks",
-                nav_keyfinder: "Key Finder", // Dodano
+                nav_keyfinder: "Key Finder", 
                 nav_contact: "Contact",
                 nav_download: "Download",
                 hero_title: "The tools that elevate your sound\nand accelerate your workflow.",
@@ -643,7 +673,7 @@
                 nav_home: "Home",
                 nav_about: "O nas",
                 nav_racks: "Racks",
-                nav_keyfinder: "Key Finder", // Dodano (zazwyczaj nie tłumaczy się nazw własnych/narzędzi w produkcji audio, ew. "Wykrywacz Tonacji")
+                nav_keyfinder: "Key Finder", 
                 nav_contact: "Kontakt",
                 nav_download: "Pobierz",
                 hero_title: "Narzędzia, które podniosą Twój dźwięk\ni przyspieszą pracę.",
