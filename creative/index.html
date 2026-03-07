@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>what-is-next creative /// devices</title>
+    
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+   
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            letter-spacing: normal;
+        }
+
+       
+        .ambient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #050505;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.08;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: white; animation-duration: 25s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #444; animation-duration: 30s; animation-direction: alternate-reverse; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #222; opacity: 0.12; filter: blur(80px); animation-name: float-center; animation-duration: 35s; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 80px) scale(1.1); } }
+        @keyframes float-center { 0% { transform: translate(-100px, -50px) rotate(0deg); } 100% { transform: translate(100px, 50px) rotate(20deg); } }
+
+    
+        section, header, footer, .m4l-section { scroll-margin-top: 120px; }
+
+        .glass-menu-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .glass-menu {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .menu-left, .menu-right { display: flex; align-items: center; gap: 1.5rem; }
+        .menu-left { padding-left: 1rem; }
+        .menu-link {
+            color: #aaa; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            transition: color 0.3s ease; display: flex; align-items: center; text-transform: lowercase;
+        }
+        .menu-link:hover, .menu-link.active { color: white; }
+        .yt-icon svg { width: 20px; height: 20px; fill: currentColor; display: block; }
+
+        .badge-new {
+            background-color: #ffffff; color: #000000; font-size: 0.6rem; font-weight: 800;
+            padding: 2px 5px; border-radius: 4px; margin-left: 6px; position: relative; top: -1px;
+            text-transform: lowercase; letter-spacing: 0;
+        }
+
+        .lang-btn {
+            background: none; border: none; color: #fff; font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; text-transform: uppercase; padding: 5px 10px; border-radius: 4px;
+            transition: background 0.3s; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .menu-download-btn {
+            background: white; color: black; text-decoration: none; padding: 0.5rem 1.2rem;
+            border-radius: 9999px; font-size: 0.85rem; font-weight: 600;
+            transition: transform 0.2s, background 0.2s; text-transform: lowercase; cursor: pointer; border: none;
+        }
+        .menu-download-btn:hover { background: #ddd; transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .hide-mobile { display: none; }
+            .glass-menu-container { width: 95%; top: 15px; }
+            .menu-left, .menu-right { gap: 0.8rem; }
+        }
+
+      
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1; font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to bottom, #ffffff, #888888);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem; text-transform: lowercase;
+        }
+
+        h2 {
+            font-size: 0.9rem; text-transform: lowercase; letter-spacing: 0.05em;
+            color: #888; margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+     
+        header { text-align: center; padding: 8rem 2rem 1rem 2rem; position: relative; z-index: 10; }
+
+        .hero-btn {
+            display: inline-block; margin-top: 2rem; padding: 0.7rem 1.4rem;
+            font-size: 0.9rem; font-weight: 500; color: #fff;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px; text-decoration: none; transition: all 0.3s ease;
+            backdrop-filter: blur(4px); text-transform: lowercase;
+        }
+        .hero-btn:hover {
+            background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .perspective-container {
+            width: 100%; height: auto; min-height: 45vh; display: flex; justify-content: center;
+            align-items: flex-start; perspective: 2000px; margin-bottom: 4rem; padding-top: 2rem;
+        }
+        .hero-image-wrapper { width: 95%; max-width: 1100px; position: relative; transform-style: preserve-3d; }
+        .hero-image-wrapper img {
+            width: 100%; height: auto; display: block;
+            filter: drop-shadow(0 20px 50px rgba(255,255,255,0.08)); border-radius: 8px;
+        }
+
+
+        .manifesto-section { padding: 2rem 2rem 6rem 2rem; text-align: center; }
+        .manifesto-text {
+            font-size: clamp(1.2rem, 3vw, 2rem); line-height: 1.2;
+            max-width: 600px; 
+            margin: 0 auto; color: #ddd; font-weight: 600; text-transform: lowercase;
+        }
+        .manifesto-sub {
+            display: block; margin-top: 1rem; font-size: 1rem; color: #888;
+            font-weight: 400; line-height: 1.4;
+            max-width: 550px; 
+            margin-left: auto; margin-right: auto;
+        }
+
+  
+        .tooltip-wrapper { position: relative; display: inline-block; vertical-align: middle; margin-left: 8px; cursor: help; }
+        .info-icon, .alert-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 18px; height: 18px; border-radius: 50%;
+            font-size: 12px; font-weight: bold;
+        }
+        .info-icon { border: 1px solid #888; color: #888; }
+        .alert-icon { border: 1px solid #ffaa00; color: #ffaa00; }
+        
+        .tooltip-content {
+            visibility: hidden; width: 220px; background-color: rgba(20,20,20,0.95);
+            color: #fff; text-align: center; border-radius: 6px; padding: 10px;
+            position: absolute; z-index: 10; bottom: 125%; left: 50%; transform: translateX(-50%);
+            opacity: 0; transition: opacity 0.3s; border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.75rem; text-transform: none; line-height: 1.4; pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+        .tooltip-wrapper:hover .tooltip-content { visibility: visible; opacity: 1; }
+
+      
+        .m4l-section { max-width: 1200px; margin: 0 auto; padding: 0 2rem 6rem 2rem; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-header h3 {
+             font-size: 1.5rem; text-transform: lowercase; color: white;
+             font-weight: 600; margin-top: 0.2rem;
+             display: flex; align-items: center; justify-content: center;
+        }
+
+        .m4l-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .m4l-item {
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; 
+            text-align: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            padding: 3rem 2rem; border-radius: 16px; transition: all 0.3s ease; height: 100%;
+        }
+        .m4l-item:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+        
+        .m4l-img {
+            width: 100%; max-width: 250px; height: auto; margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); transition: transform 0.3s ease;
+        }
+        .m4l-item:hover .m4l-img { transform: scale(1.05); }
+
+        .m4l-item h3 {
+            font-size: 1.8rem; margin-bottom: 0.5rem; color: white; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;
+        }
+        .m4l-desc { font-size: 1rem; color: #888; margin-bottom: 1rem; max-width: 400px; line-height: 1.5; }
+
+        @media (max-width: 768px) { .m4l-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+       
+        .racks-container { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .rack-list-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; transition: all 0.2s ease;
+        }
+        .rack-list-item:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); }
+        .rack-left { display: flex; align-items: center; gap: 1.5rem; }
+        .rack-thumb { width: 40px; height: 40px; object-fit: contain; opacity: 0.8; }
+        .rack-info h4 { font-size: 1.1rem; color: #fff; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .rack-info span { font-size: 0.7rem; color: #555; text-transform: lowercase; letter-spacing: 0; font-weight: 700; }
+        .rack-desc-short { font-size: 0.9rem; color: #666; text-align: right; max-width: 350px; }
+        @media (max-width: 600px) { .rack-desc-short { display: none; } }
+
+      
+        footer { text-align: center; padding: 6rem 2rem 4rem 2rem; }
+        
+        .footer-cta { font-size: 1.2rem; margin-bottom: 1rem; color: #fff; font-weight: 600; text-transform: lowercase; }
+
+        .download-btn {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: white; color: black; padding: 1.2rem 3rem;
+            border-radius: 50px; font-size: 1.1rem; font-weight: 600;
+            text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer; border: none; text-transform: lowercase;
+        }
+        .download-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        
+        .footer-release-btn {
+            display: inline-block; margin-top: 3rem; font-size: 0.8rem; color: #555;
+            text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding-bottom: 2px; transition: color 0.3s; text-transform: lowercase;
+        }
+        .footer-release-btn:hover { color: #fff; border-color: #fff; }
+
+     
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        
+        .modal-content {
+            background: rgba(20,20,20,0.95); 
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem; 
+            border-radius: 12px; text-align: center; max-width: 450px; width: 90%;
+            transform: scale(0.95); transition: transform 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        
+        .modal-title { 
+            font-size: 1.1rem; 
+            color: white; margin-bottom: 1.5rem; 
+            text-transform: lowercase; font-weight: 600; 
+        }
+        
+        .modal-options { display: flex; flex-direction: column; gap: 0.8rem;}
+        .modal-option-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.8rem; 
+            border-radius: 8px; text-decoration: none; color: white;
+            transition: all 0.2s; text-transform: lowercase; font-weight: 600; font-size: 0.9rem;
+        }
+        .modal-option-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+        .modal-req { display: block; font-size: 0.6rem; margin-top: 4px; color: #666; text-transform: lowercase; font-weight: 400; }
+        .modal-option-btn:hover .modal-req { color: #999; }
+
+        .close-modal {
+            position: absolute; top: 10px; right: 15px; color: #666; font-size: 1.2rem;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .close-modal:hover { color: white; }
+
+        .anim-up { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+ 
+    <div class="modal-overlay" id="downloadModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal()">&times;</div>
+            <h3 class="modal-title">choose what you want to download</h3>
+            <div class="modal-options">
+                <a href="https://quei.gumroad.com/l/rackpack" target="_blank" class="modal-option-btn">
+                    racks
+                    <span class="modal-req">ableton live 12 standard or higher required</span>
+                </a>
+                <a href="https://quei.gumroad.com/l/m4l" target="_blank" class="modal-option-btn">
+                    m4l devices
+                    <span class="modal-req">ableton 12 suite or standard with m4l required</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ambient-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="glass-menu-container">
+        <nav class="glass-menu">
+            <div class="menu-left">
+                <a href="#top" class="menu-link active">
+                    <span data-lang="nav_devices">devices</span><span class="badge-new">new</span>
+                </a>
+                <a href="#racks" class="menu-link hide-mobile" data-lang="nav_racks">racks</a>
+                <a href="https://what-is-next.vip/tools" class="menu-link hide-mobile" data-lang="nav_keyfinder">tools</a>
+            </div>
+            <div class="menu-right">
+                <a href="https://www.youtube.com/@what-is-next-label" target="_blank" class="menu-link yt-icon" aria-label="YouTube">
+                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">PL</button>
+                <a href="mailto:demo@what-is-next.vip" class="menu-link" data-lang="nav_contact">contact</a>
+                <button class="menu-download-btn" onclick="openModal()" data-lang="nav_download">download</button>
+            </div>
+        </nav>
+    </div>
+
+    
+    <header id="top">
+        <div class="header-content">
+            <h2 class="anim-up">what-is-next™ creative</h2>
+            <h1 class="anim-up" data-lang="hero_title">meet our devices</h1>
+            <p class="anim-up" data-lang="hero_desc">create more. spend less.</p>
+            <a href="#footer" class="hero-btn anim-up">download m4l devices</a>
+        </div>
+    </header>
+
+    <div class="perspective-container">
+        <div class="hero-image-wrapper" id="heroImage">
+            <img src="m4l.png" alt="M4L Devices Interface">
+        </div>
+    </div>
+
+    
+    <section class="manifesto-section anim-fade">
+        <div class="manifesto-text" data-lang="manifesto">
+            in a world full of expensive music tools, we don't think artists should have to pay.
+        </div>
+        <span class="manifesto-sub" data-lang="manifesto_sub">what-is-next™ creative exists for artists without the budget for expensive tools. instead, we provide free ableton racks and max for live devices so you can focus on making music - not paying for it.</span>
+    </section>
+
+ 
+    <section class="m4l-section" id="devices">
+        <div class="section-header">
+            <h2>new collection</h2>
+            <h3 data-lang="m4l_section_title">
+                max for live devices 
+                <div class="tooltip-wrapper">
+                    <span class="info-icon">i</span>
+                    <span class="tooltip-content" data-lang="tooltip_m4l">Max for Live devices are custom instruments and effects that extend Ableton Live's capabilities, created by the community.</span>
+                </div>
+            </h3>
+        </div>
+
+        <div class="m4l-grid">
+            <div class="m4l-item anim-fade">
+                <img src="haazz.png" alt="HAAZZ" class="m4l-img">
+                <h3>HAAZZ™</h3>
+                <p class="m4l-desc" data-lang="haazz_desc">A simple Haas effect device with added dry/wet control, allowing you to create more stereo width and a controlled sense of chaos.</p>
+            </div>
+
+            <div class="m4l-item anim-fade">
+                <img src="meedside.png" alt="MEEDSIDE" class="m4l-img">
+                <h3>MEEDSIDE™</h3>
+                <p class="m4l-desc" data-lang="meedside_desc">A straightforward mid/side splitter, letting you separate and process the center (mid) and sides of your stereo signal independently.</p>
+            </div>
+
+            <div class="m4l-item anim-fade">
+                <img src="meedysheeft.png" alt="MEEDYSHEEFT" class="m4l-img">
+                <h3>
+                    MEEDYSHEEFT™
+                    <div class="tooltip-wrapper">
+                        <span class="alert-icon">!</span>
+                        <span class="tooltip-content">Known Issue: MPE is currently not working as we couldn't make Meedysheeft pass the signal of modulation.</span>
+                    </div>
+                </h3>
+                <p class="m4l-desc" data-lang="meedysheeft_desc">A MIDI shifter with added octave modulation buttons, perfect for exploring different pitches and finding the right sound without editing the original MIDI.</p>
+            </div>
+
+             <div class="m4l-item anim-fade">
+                <img src="oscil.png" alt="OSCEEL" class="m4l-img">
+                <h3>OSCEEL™</h3>
+                <p class="m4l-desc" data-lang="oscil_desc">A real-time oscilloscope for viewing waveforms, featuring adjustable sampling and gain. It displays mids in blue and sides in orange.</p>
+            </div>
+        </div>
+    </section>
+
+   
+    <section class="racks-container" id="racks">
+        <div class="section-header">
+            <h2 style="margin-bottom: 0.2rem;">legacy collection</h2>
+            <h3>classic racks</h3>
+        </div>
+        
+       
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="reverb.png" class="rack-thumb">
+                <div class="rack-info"><h4>R3VARB 2</h4><span>reverb</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack1_short">Hit-ready reverb built for ultra-fast workflow.</p>
+        </div>
+        
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="lfo.png" class="rack-thumb">
+                <div class="rack-info"><h4>LFOQ 2</h4><span>modulation</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack2_short">Lightweight LFO rack for fast modulation.</p>
+        </div>
+        
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="phone.png" class="rack-thumb">
+                <div class="rack-info"><h4>PHONER</h4><span>eq / lo-fi</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack3_short">Focused EQ tool for phone-like band sounds.</p>
+        </div>
+       
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="knock.png" class="rack-thumb">
+                <div class="rack-info"><h4>KNOCKER™</h4><span>fx / riser</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack4_short">Tension-boosting micro-riser for drops.</p>
+        </div>
+        
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="delayed.png" class="rack-thumb">
+                <div class="rack-info"><h4>DELAYED 2</h4><span>delay</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack5_desc">Revamped classic delay with two modes.</p>
+        </div>
+        
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="crush.png" class="rack-thumb">
+                <div class="rack-info"><h4>CRUSHY BOY 2</h4><span>distortion</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack6_desc">Bitcrusher with added flavor options.</p>
+        </div>
+        
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="atmo.png" class="rack-thumb">
+                <div class="rack-info"><h4>ATMO</h4><span>reverb</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack7_desc">Instant atmosphere generator.</p>
+        </div>
+     
+        <div class="rack-list-item anim-fade">
+            <div class="rack-left">
+                <img src="roomboi.png" class="rack-thumb">
+                <div class="rack-info"><h4>ROOMBOY 2</h4><span>reverb</span></div>
+            </div>
+            <p class="rack-desc-short" data-lang="rack8_desc">Unique space creator for deep backgrounds.</p>
+        </div>
+
+    </section>
+
+   
+    <footer id="footer">
+        <div class="footer-cta" data-lang="footer_cta">download here</div>
+        <button onclick="openModal()" class="download-btn">
+            <span data-lang="btn_download">download</span>
+        </button>
+        <br>
+        <a href="https://what-is-next.vip/creative/release-notes/" class="footer-release-btn">
+            release notes
+        </a>
+        <p style="margin-top: 4rem; font-size: 0.75rem; color: #333; text-transform: uppercase;">© 2026 what-is-next™</p>
+    </footer>
+
+   
+    <script>
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        function openModal() {
+            document.getElementById('downloadModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('downloadModal').classList.remove('active');
+        }
+       
+        document.getElementById('downloadModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+      
+        const translations = {
+            en: {
+                nav_devices: "devices", nav_racks: "racks", nav_keyfinder: "tools", nav_contact: "contact", nav_download: "download",
+                hero_title: "meet our devices", hero_desc: "create more. spend less.",
+                manifesto: "in a world full of expensive music tools, we don't think artists should have to pay.",
+                manifesto_sub: "what-is-next™ creative exists for artists without the budget for expensive tools. instead, we provide free ableton racks and max for live devices so you can focus on making music - not paying for it.",
+                
+                m4l_section_title: 'max for live devices <div class="tooltip-wrapper"><span class="info-icon">i</span><span class="tooltip-content">Max for Live devices are custom instruments and effects that extend Ableton Live\'s capabilities, created by the community.</span></div>',
+                tooltip_m4l: "Max for Live devices are custom instruments and effects that extend Ableton Live's capabilities, created by the community.",
+
+                haazz_desc: "a simple haas effect device with added dry/wet control, allowing you to create more stereo width and a controlled sense of chaos.",
+                meedside_desc: "a straightforward mid/side splitter, letting you separate and process the center (mid) and sides of your stereo signal independently.",
+                meedysheeft_desc: "a midi shifter with added octave modulation buttons, perfect for exploring different pitches and finding the right sound without editing the original midi.",
+                oscil_desc: "a real-time oscilloscope for viewing waveforms, featuring adjustable sampling and gain. it displays mids in blue and sides in orange.",
+
+                rack1_short: "hit-ready reverb built for ultra-fast workflow.",
+                rack2_short: "lightweight lfo rack for fast modulation.",
+                rack3_short: "focused eq tool for phone-like band sounds.",
+                rack4_short: "tension-boosting micro-riser for drops.",
+                rack5_desc: "Revamped classic delay with two modes.",
+                rack6_desc: "Bitcrusher with added flavor options.",
+                rack7_desc: "Instant atmosphere generator.",
+                rack8_desc: "Unique space creator for deep backgrounds.",
+
+                footer_cta: "download here",
+                btn_download: "download"
+            },
+            pl: {
+                nav_devices: "urządzenia", nav_racks: "racki", nav_keyfinder: "narzędzia", nav_contact: "kontakt", nav_download: "pobierz",
+                hero_title: "poznaj nasze urządzenia", hero_desc: "twórz więcej. wydawaj mniej.",
+                manifesto: "w świecie drogich narzędzi muzycznych uważamy, że artyści nie powinni musieć płacić.",
+                manifesto_sub: "what-is-next™ creative istnieje dla artystów bez budżetu na drogi sprzęt. zamiast tego dostarczamy darmowe racki do abletona i urządzenia max for live, abyś mógł skupić się na tworzeniu muzyki - a nie na płaceniu za nią.",
+
+                m4l_section_title: 'urządzenia max for live <div class="tooltip-wrapper"><span class="info-icon">i</span><span class="tooltip-content">Urządzenia Max for Live to niestandardowe instrumenty i efekty rozszerzające możliwości Ableton Live.</span></div>',
+                tooltip_m4l: "Urządzenia Max for Live to niestandardowe instrumenty i efekty rozszerzające możliwości Ableton Live.",
+
+                haazz_desc: "prosty efekt haas z kontrolą dry/wet, pozwalający na tworzenie szerszego stereo i kontrolowanego chaosu.",
+                meedside_desc: "prosty splitter mid/side, pozwalający na niezależne przetwarzanie środka (mid) i boków (side) sygnału stereo.",
+                meedysheeft_desc: "shifter midi z przyciskami modulacji oktaw, idealny do eksploracji różnych tonacji i znajdowania właściwego brzmienia bez edycji midi.",
+                oscil_desc: "oscyloskop w czasie rzeczywistym do podglądu fal, z regulowanym próbkowaniem i wzmocnieniem. wyświetla mid na niebiesko i side na pomarańczowo.",
+
+                rack1_short: "gotowy na hity pogłos o szybkim workflow.",
+                rack2_short: "lekki rack lfo do szybkiej modulacji.",
+                rack3_short: "narzędzie eq do efektu telefonicznego.",
+                rack4_short: "budujący napięcie riser do dropów.",
+                rack5_desc: "Odświeżony klasyczny delay z dwoma trybami.",
+                rack6_desc: "Bitcrusher z dodanymi opcjami smaku.",
+                rack7_desc: "Generator natychmiastowej atmosfery.",
+                rack8_desc: "Kreator unikalnej przestrzeni dla głębokich teł.",
+
+                footer_cta: "pobierz tutaj",
+                btn_download: "pobierz"
+            }
+        };
+
+        let currentLang = 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'pl' : 'en';
+            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'PL' : 'EN';
+            
+           
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key]; 
+                }
+            });
+            
+            
+            const modalTitle = document.querySelector('.modal-title');
+            if(modalTitle) modalTitle.innerText = currentLang === 'en' ? 'choose what you want to download' : 'wybierz co chcesz pobrać';
+        }
+
+        
+        gsap.from(".glass-menu-container", { y: -100, opacity: 0, duration: 1, ease: "power3.out", delay: 0.5 });
+        gsap.to("#heroImage", {
+            scrollTrigger: { trigger: "body", start: "top top", end: "100vh top", scrub: 1 },
+            rotateX: 20, scale: 0.95, y: 80, opacity: 0.6, transformOrigin: "center top", ease: "none"
+        });
+        gsap.to(".anim-up", { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" });
+        document.querySelectorAll(".anim-fade").forEach((item) => {
+            gsap.fromTo(item, { y: 40, opacity: 0 }, {
+                scrollTrigger: { trigger: item, start: "top 90%" },
+                y: 0, opacity: 1, duration: 0.8, ease: "power2.out"
+            });
+        });
+    </script>
+</body>
+</html>
