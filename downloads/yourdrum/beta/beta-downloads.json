@@ -1,0 +1,27 @@
+{
+  "product": "YOURDRUM™",
+  "description": "Download the newest YOURDRUM™ beta build for your platform. The page is controlled by this JSON file.",
+  "updated": "2026-06-15",
+  "builds": [
+    {
+      "platform": "windows",
+      "version": "0.2.0-beta.1",
+      "directory": "downloads/YourDrum0.1.0Win.zip",
+      "date": "2026-06-15",
+      "latest": true,
+      "changes": [
+        "pitch amplitude + optymalizacja"
+      ]
+    },
+    {
+      "platform": "macos",
+      "version": "0.2.0-beta.1",
+      "directory": "downloads/YourDrum0.1.0OSX.zip",
+      "date": "2026-06-15",
+      "latest": true,
+      "changes": [
+        "pitch amplitude + optymalizacja"
+      ]
+    }
+  ]
+}
